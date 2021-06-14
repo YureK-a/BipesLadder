@@ -1,15 +1,20 @@
 var width = window.innerWidth
 var height = window.innerHeight
 
+//Área para o simulador acontecer
 var area = new Konva.Stage ({
     container: 'aaa',
     width: width,
     height: height,
 })
 
-var camadoca = new Konva.Layer()
-var camada = new Konva.Layer()
 
+//Camadas
+var camada = new Konva.Layer()
+var camada2 = new Konva.Layer()
+
+
+//Barra lateral
 var side = new Konva.Rect({
     x: -100,
     y: -150,
@@ -19,43 +24,11 @@ var side = new Konva.Rect({
     stroke: 'brown',
     strokeWidth: 7,
   });
+
+
 /*
-  var quadrado = new Konva.Rect({
-    x: 20,
-    y: 20,
-    width: 100,
-    height: 100,
-    fill: 'green',
-    stroke: 'black',
-    strokeWidth: 4,
-    draggable: true,
-  });
-//x 130
-  var quadrado2 = new Konva.Rect({
-    x: 20,
-    y: 130,
-    width: 100,
-    height: 100,
-    fill: 'green',
-    stroke: 'black',
-    strokeWidth: 4,
-    draggable: true,
-  });
-  var quadrado3 = new Konva.Rect({
-    x: 20,
-    y: 240,
-    width: 100,
-    height: 100,
-    fill: 'green',
-    stroke: 'black',
-    strokeWidth: 4,
-    draggable: true,
-  });
-
-*/
-
   for (var i = 0; i < 7; i++) {
-    camadoca.add(
+    camada2.add(
       new Konva.Rect({
         x: 20,
         y: 20 + (110 * i),
@@ -69,7 +42,7 @@ var side = new Konva.Rect({
   }
 
   for (var i = 0; i < 7; i++) {
-    camadoca.add(
+    camada2.add(
       new Konva.Rect({
         x: 130,
         y: 20 + (110 * i),
@@ -81,30 +54,44 @@ var side = new Konva.Rect({
       })
     );
   }
-/*
-  var imageObj = new Image();
-  imageObj.onload = function () {
-    var yoda = new Konva.Image({
-      x: 500,
-      y: 50,
-      image: imageObj,
-      width: 106,
-      height: 118,
-    });
-
-  camada.add(yoda);
-      };
-      imageObj.src = 'teste.jfif';
 */
+
+//Imagem teste
+var imagemteste = new Image();
+  imagemteste.onload = function () {
+    var teste = new Konva.Image({
+      x: 20,
+      y: 20,
+      image: imagemteste,
+      width: 100,
+      height: 100,
+      draggable: true,
+      stroke: 'black',
+      strokeWidth: 7,
+      });
+    camada.add(teste);
+    };
+imagemteste.src = 'imagens/paratestes.png';
+
+/*
+teste.on('dragstart', function() {
+    camada.add(
+      new Konva.Rect({
+        x: 130,
+        y: 20 + (110),
+        width: 100,
+        height: 100,
+        fill: 'blue',
+        draggable: true,
+        name: 'object',
+      })
+    );
+});
+*/
+
 camada.add(side)
-/*
-camada.add(quadrado)
-camada.add(quadrado2)
-camada.add(quadrado3)
-*/
-
 area.add(camada)
-area.add(camadoca)
+area.add(camada2)
 
 area.draw()
 
