@@ -25,6 +25,23 @@ var side = new Konva.Rect({
     strokeWidth: 7,
   });
 
+//Para testes
+function escrever(mensagem) {
+  text.text(mensagem);
+}
+
+function writeMessage(message) {
+  text.text(message);
+}
+
+var text = new Konva.Text({
+  x: 10,
+  y: 10,
+  fontFamily: 'Calibri',
+  fontSize: 24,
+  text: '',
+  fill: 'black',
+});
 
 /*
   for (var i = 0; i < 7; i++) {
@@ -58,7 +75,7 @@ var side = new Konva.Rect({
 
 //Imagem teste
 var imagemteste = new Image();
-  imagemteste.onload = function () {
+imagemteste.onload = function () {
     var teste = new Konva.Image({
       x: 20,
       y: 20,
@@ -68,6 +85,7 @@ var imagemteste = new Image();
       draggable: true,
       stroke: 'black',
       strokeWidth: 7,
+      id:'idteste',
       });
     camada.add(teste);
     };
@@ -75,7 +93,7 @@ imagemteste.src = 'imagens/paratestes.png';
 
 /*
 teste.on('dragstart', function() {
-    camada.add(
+    /*camada.add(
       new Konva.Rect({
         x: 130,
         y: 20 + (110),
@@ -85,11 +103,24 @@ teste.on('dragstart', function() {
         draggable: true,
         name: 'object',
       })
-    );
+    ); 
+    escrever('julia boboca')
+});
+
+
+imagemteste.on('dragstart', function() {
+  writeMessage('dragstart');
 });
 */
 
+document.getElementById('idteste').addEventListener('click',
+  function () {
+    writeMessage('dragstart');
+    })
+
 camada.add(side)
+camada2.add(text);
+
 area.add(camada)
 area.add(camada2)
 
