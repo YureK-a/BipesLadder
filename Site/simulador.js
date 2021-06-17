@@ -21,7 +21,7 @@ var side = new Konva.Rect({
     width: 350,
     height: 8000,
     fill: 'white',
-    stroke: 'brown',
+    stroke: '#212529',
     strokeWidth: 7,
   });
 
@@ -111,13 +111,13 @@ teste.on('dragstart', function() {
 imagemteste.on('dragstart', function() {
   writeMessage('dragstart');
 });
-*/
+
 
 document.getElementById('idteste').addEventListener('click',
   function () {
     writeMessage('dragstart');
     })
-
+*/
 camada.add(side)
 camada2.add(text);
 
