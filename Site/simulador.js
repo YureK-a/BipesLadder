@@ -1,3 +1,4 @@
+
 //Janela do stage
 var width = window.innerWidth
 var height = window.innerHeight
@@ -23,11 +24,11 @@ var side = new Konva.Rect({
     fill: 'white',
     stroke: '#212529',
     strokeWidth: 7,
-  });
+  })
 
 //Para testes
 function escrever(mensagem) {
-  text.text(mensagem);
+  text.text(mensagem)
 }
 
 var text = new Konva.Text({
@@ -52,29 +53,26 @@ imagemteste.onload = function () {
       draggable: true,
       stroke: 'black',
       strokeWidth: 7,
-      });
+      })
 
-    camada.add(teste);
+    camada.add(teste)
 
     //Função para clonar durante o drag and drop
     teste.on('dragstart', function() {
-      teste.stopDrag();
-      var clone = teste.clone();
-      clone.off('dragstart');
-      camada.add(clone);
-      clone.startDrag();
-  });
-};
-
-
-
+      teste.stopDrag()
+      var clone = teste.clone()
+      clone.off('dragstart')
+      camada.add(clone)
+      clone.startDrag()
+  })
+}
 
 
 
 imagemteste.src = 'imagens/paratestes.png';
 
 camada.add(side)
-camada2.add(text);
+camada2.add(text)
 
 area.add(camada)
 area.add(camada2)
