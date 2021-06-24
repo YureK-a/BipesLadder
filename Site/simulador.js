@@ -78,3 +78,16 @@ area.add(camada)
 area.add(camada2)
 
 area.draw()
+
+//Teste do React
+function tick() {
+  const element = (
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>It is {new Date().toLocaleTimeString()}.</h2>
+    </div>
+  );
+
+ReactDOM.render(element, document.querySelector('div#react'))
+  }
+  setInterval(tick, 1000);
