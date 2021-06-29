@@ -1,7 +1,7 @@
-import Konva from 'konva';
-import  ReactDOM  from 'react-dom';
-import React from 'react';
-import { Stage, Layer, Rect } from 'react-konva';
+import Konva from '/konva';
+import ReactDOM from '/@react-dom';
+import React from '/react';
+import { Stage, Layer, Rect } from '/react-konva';
 
 function Palco() {
   return /*#__PURE__*/React.createElement(Stage, {

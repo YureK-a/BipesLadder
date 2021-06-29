@@ -1,3 +1,5 @@
+
+import  ReactDOM  from '@react-dom/Core';
 import React from 'react';
 import { Stage, Layer, Rect } from 'react-konva';
 
