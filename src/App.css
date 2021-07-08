@@ -1,38 +1,66 @@
+body {
+  background-color: hsl(93, 96%, 82%);
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  text-align: left;
+  width: 100%;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: calc(10px + 1.5vmin);
 }
 
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#divDaLista {
+  width: 5em;
+  align-self: flex-start;
+  padding-left: 1em;
+}
+
+.listaDeFotos {
+  list-style: none;
+  padding-left: 0;
+}
+
+.listaDeFotos li {
+  display: flex;
+  align-items: center;
+  border: solid 2px #d0d0d0;
+  border-radius: .2em;
+  padding: .5em .8em .5em .5em;
+  margin-bottom: 1em;
+}
+
+.listaDeFotos p {
+  max-width: none;
+  font-weight: bold;
+  margin: 0;
+}
+
+.fotos-thumb {
+  overflow: hidden;
+  flex-shrink: 0;
+  width: 2em;
+  height: 2em;
+  background-color: #e8e8e8;
+  padding: .5em;
+  margin-right: .5em;
+}
+
+.fotos-thumb img {
+  display: block;
+  width: 2em;
+  height: auto;
+}
+
+.simulacao {
+  background-color: red;
 }
