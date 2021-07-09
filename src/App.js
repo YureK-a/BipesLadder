@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './App.css';
+import ListaLadder from './lista';
 
 
 const fotosTestes = [
@@ -67,7 +69,7 @@ function App() {
                 )}
               </Droppable>
             </div>
-
+            <ListaLadder></ListaLadder>
         </DragDropContext>
       </header>
     </div>
