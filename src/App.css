@@ -12,6 +12,7 @@ body {
   flex-direction: column;
   justify-content: center;
   font-size: calc(10px + 1.5vmin);
+  background-color: hsl(93, 96%, 12%);
 }
 
 .App-link {
@@ -19,72 +20,65 @@ body {
 }
 
 #corpo {
-  width: 100%; 
-  overflow: hidden;
+  width: auto; 
 }
 
-#divDaLista {
+#divDosBotoes {
   align-self: flex-start;
   padding-left: 1em;
-  width: 5em; 
+  width: 8em;
+  height: 100%;
   float: left;
-  padding-bottom: 5em;
-}
-
-#divDireita {
-  margin-left: 20em;
-}
-
-.listaDeFotos {
-  list-style: none;
-  padding-left: 0;
-}
-
-.listaDeFotos li {
-
-  align-items: center;
-  border: solid 2px #d0d0d0;
-  border-radius: .2em;
-  padding: .5em .8em .5em .5em;
-  margin-bottom: 1em;
-}
-
-
-.listaDeFotos p {
-  max-width: none;
-  font-weight: bold;
-  margin: 0;
+  background-color: blueviolet;
 }
 
 .fotos-thumb {
   overflow: hidden;
   flex-shrink: 0;
-  width: 2em;
-  height: 2em;
-  background-color: #e8e8e8;
+  width: 4em;
+  height: 4em;
   padding: .5em;
   margin-right: .5em;
 }
 
 .fotos-thumb img {
   display: block;
-  width: 2em;
-  height: 2em;
+  width: 4em;
+  height: 4em;
+}
+
+#divDireita {
+  margin-left: 20em;
+  margin-right: 10em;
+  border: 10em;
+  background-color: blue;
+  width: auto;
+  padding: 1em;
 }
 
 .direitaFotos {
-  list-style-type: none;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
-  width: 80%;
+  width: auto;
   height: 5em;
   background-color: red;
+  display: 'flex';
+  overflow: 'auto';
 }
 
-.direitaFotos li {
+.direitaFotosDiv {
   float: left;  
-  padding: .5em .8em .5em .5em;
-  border: solid 2px #d0d0d0;
-  border-radius: .2em;
+}
+
+.direitaFotosDiv img {
+  display: block;
+  width: 4em;
+  height: 4em;
+}
+
+#divDoLixo {
+  padding: 1em;
+  margin-top: 10em;
+  width: 7em;
+  height: 7em;
+  background-color: tomato;
 }

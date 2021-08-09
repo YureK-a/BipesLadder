@@ -1,70 +1,179 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import './App.css';
-import ListaLadder from './lista';
+import React, { Children, useRef, useState } from 'react'
+import ReactDOM, { render } from 'react-dom'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import './App.css'
 import {fotosTestes, direita} from "./dados";
 
+//biblio do ID
+import { uuid } from 'uuidv4';
 
-function App() {
 
-  const [fotos, atualizarFotos] = useState(fotosTestes);
+const reorder = (itensD, startIndex, endIndex) => {
+  const result = Array.from(itensD);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
 
-  const [direitaitens, atualizardireita] = useState(direita)
+  return result;
+}
 
-  function handleOnDragEnd(result) {
-        if (!result.destination) return;
+
+class App extends React.Component{
+  constructor(props) {
+    super(props)
+    this.state = {
+      fotos: Array.from(fotosTestes),
+      itensD: Array.from(direita)
+    };
+
+    this.onDragEnd = this.onDragEnd.bind(this);
+
+    this.adicionarContato = this.adicionarContato.bind(this);
+
   
-      const itemsE = Array.from(fotos);
-      const itemsD = Array.from(direitaitens)
-
-      const [reorderedItem] = itemsE.splice(result.source.index, 0);
-
-      itemsD.splice(result.destination.index, 0, reorderedItem);
-
-      atualizarFotos(itemsE);
-      atualizardireita(itemsD)
-    
   }
+
+/** 
+//função para organizar a lista
+  onDragEnd(result, itensD) {
+    var {source, destination} = result;
+    var sourceClone, destinationClone;
+
+    if (!destination) {
+      return
+    }
     
-  return (
-    <div className="App">
-      <header className="App-header">
-      <h1>Teste de listas</h1>
-        <DragDropContext onDragEnd={handleOnDragEnd}>
+    if (source.droppableId == destination.droppableId) {
+      return
+    } else {
+      sourceClone = Array.from(this.state[source.droppableId]);
+      destinationClone = Array.from(this.state[destination.droppableId]);
+    }
+    
+    var [removed] = sourceClone.splice(source.index, 1);
+    destinationClone.splice(destination.index, 0, removed);
+
+    result = {};
+    result[source.droppableId] = sourceClone;
+    result[destination.droppableId] = destinationClone;
+
+    this.setState(result);
+  }
+    */
+
+  onDragEnd(result) {
+    // dropped outside the list
+
+
+
+    if (!result.destination) {
+      return;
+    } 
+
+    const itensD = reorder(
+      this.state.itensD,
+      result.source.index,
+      result.destination.index
+    );
+
+    this.setState({
+      itensD,
+    });
+  }
+
+
+//função para gerar contatos
+  adicionarContato = (name, itensD) => {
+
+    itensD = Array.from(direita)
+
+    let idTemp = uuid()
+
+    if (name === 'Contato Aberto') {
+      direita.push({
+        id: `a${idTemp}`,
+        name: name,
+        thumb: '/imagens/contatoaberto.jpeg'
+        })
+    } else 
+    if (name === 'Contato Fechado') {
+      direita.push({
+        id: `f${idTemp}`,
+        name: 'Contato Fechado',
+        thumb: '/imagens/contatofechado.jpeg'
+        })
+    }
+  
+    console.log('testeA')
+
+    this.setState((prevState) => ({
+  itensD : Array.from(direita)
+}))
+  }
+  
+  
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1>Teste de listas</h1>
+        </header>
+        <DragDropContext onDragEnd={this.onDragEnd}>
           <div id='corpo'>
-            <div id="divDaLista">
-              <Droppable droppableId="fotos">
+            <div id="divDosBotoes">
+                  <div id='listaEsquerda'> 
+                    <div>
+                      <div className="fotos-thumb" onClick={() => this.adicionarContato('Contato Aberto')}>
+                        <img src='/imagens/contatoaberto.jpeg' alt='contato aberto'></img>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="fotos-thumb" onClick={() => this.adicionarContato('Contato Fechado')}>
+                        <img src='/imagens/contatofechado.jpeg' alt='contato fechado'></img>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            <div id='divDireita'>
+              <div id="lista1DaDireita">
+                <Droppable droppableId='itens'>
+                  {(provided) => (
+                    <div className="direitaFotos" {...provided.droppableProps} ref={provided.innerRef}>
+                      {this.state.itensD.map(({id, name, thumb}, index) => {
+                        return (
+                          <Draggable key={id} draggableId={id} index={index}>
+                              {(provided) => (
+                                <div className="direitaFotosDiv" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                  <div className="fotos-thumb">
+                                    <img src={thumb} ></img>
+                                  </div>
+                                </div>
+                              )}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+            </div>       
+            <br></br>
+            <div id='divDoLixo'>
+              <Droppable droppableId='lixo'>
                 {(provided) => (
-                  <ul className="listaDeFotos" {...provided.droppableProps} ref={provided.innerRef}>
-                    {fotos.map(({id, name, thumb}, index) => {
-                      return (
-                        <Draggable key={id} draggableId={id} index={index}>
-                          {(provided) => (
-                            <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                              <div className="fotos-thumb">
-                                <img src={thumb} alt={` ${name} Thumb`} />
-                              </div>
-                            </li>
-                          )}
-                        </Draggable>
-                      );
-                    })}
+                  <div id='lixoID' {...provided.droppableProps} ref={provided.innerRef}>
+                    <img src='/imagens/lixinho.png' alt='lixinhoFoto'></img>
                     {provided.placeholder}
-                  </ul>
+                  </div>
                 )}
               </Droppable>
             </div>
-            <div id='divDireita'>
-              <ListaLadder></ListaLadder>
-            </div>
-            </div>
-          </DragDropContext>
-        </header>
+          </div>
+        </DragDropContext>
       </div>
     );
+  }
 }
 
-  
-export var direitaitens
+
 export default App;
