@@ -1,5 +1,4 @@
-import React, { Children, useRef, useState } from 'react'
-import ReactDOM, { render } from 'react-dom'
+import React, {} from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import './App.css'
 import {fotosTestes, direita} from "./dados";
@@ -22,52 +21,31 @@ class App extends React.Component{
     super(props)
     this.state = {
       fotos: Array.from(fotosTestes),
-      itensD: Array.from(direita)
+      itensD: Array.from(direita),
+      
     };
 
     this.onDragEnd = this.onDragEnd.bind(this);
 
     this.adicionarContato = this.adicionarContato.bind(this);
+    this.adicionarLinha = this.adicionarLinha.bind(this);
 
   
   }
 
-/** 
-//função para organizar a lista
   onDragEnd(result, itensD) {
-    var {source, destination} = result;
-    var sourceClone, destinationClone;
 
-    if (!destination) {
-      return
-    }
+    const {source, destination} = result
     
-    if (source.droppableId == destination.droppableId) {
-      return
-    } else {
-      sourceClone = Array.from(this.state[source.droppableId]);
-      destinationClone = Array.from(this.state[destination.droppableId]);
-    }
-    
-    var [removed] = sourceClone.splice(source.index, 1);
-    destinationClone.splice(destination.index, 0, removed);
-
-    result = {};
-    result[source.droppableId] = sourceClone;
-    result[destination.droppableId] = destinationClone;
-
-    this.setState(result);
-  }
-    */
-
-  onDragEnd(result) {
-    // dropped outside the list
-
-
 
     if (!result.destination) {
       return;
     } 
+    
+    else if (destination.droppableId === 'lixo') {
+      console.log(result)
+     itensD.splice(result.source.index, 1);
+    }
 
     const itensD = reorder(
       this.state.itensD,
@@ -109,8 +87,15 @@ class App extends React.Component{
   itensD : Array.from(direita)
 }))
   }
-  
-  
+
+  adicionarLinha() {
+    console.log('testeLinha')
+    React.createElement(
+      <img src='/imagens/lixinho.png' alt='lixinhoFoto' />
+    )
+
+  }
+
   render() {
     return (
       <div className="App">
@@ -123,12 +108,12 @@ class App extends React.Component{
                   <div id='listaEsquerda'> 
                     <div>
                       <div className="fotos-thumb" onClick={() => this.adicionarContato('Contato Aberto')}>
-                        <img src='/imagens/contatoaberto.jpeg' alt='contato aberto'></img>
+                        <img src='/imagens/contatoaberto.jpeg' alt='contato aberto' />
                       </div>
                     </div>
                     <div>
                       <div className="fotos-thumb" onClick={() => this.adicionarContato('Contato Fechado')}>
-                        <img src='/imagens/contatofechado.jpeg' alt='contato fechado'></img>
+                        <img src='/imagens/contatofechado.jpeg' alt='contato fechado' />
                       </div>
                     </div>
                   </div>
@@ -140,21 +125,28 @@ class App extends React.Component{
                     <div className="direitaFotos" {...provided.droppableProps} ref={provided.innerRef}>
                       {this.state.itensD.map(({id, name, thumb}, index) => {
                         return (
-                          <Draggable key={id} draggableId={id} index={index}>
-                              {(provided) => (
-                                <div className="direitaFotosDiv" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                  <div className="fotos-thumb">
-                                    <img src={thumb} ></img>
+                          <div>
+                            <Draggable key={id} draggableId={id} index={index}>
+                                {(provided) => (
+                                  <div className="direitaFotosDiv" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                    <div className="fotos-thumb">
+                                      <img src={thumb} alt={name} />
+                                    </div>
                                   </div>
-                                </div>
-                              )}
-                          </Draggable>
+                                )}
+                            </Draggable>
+                          </div>
                         );
                       })}
                       {provided.placeholder}
                     </div>
                   )}
                 </Droppable>
+                <img className='capacitorImg' src='/imagens/capacitor.jpeg' alt='capacitor' />
+                <br />
+                <div id='adicionarDiv' onClick={this.adicionarLinha}>
+                  <img src='/imagens/adicionar.png' alt='adicionar' />
+                </div>
               </div>
             </div>       
             <br></br>
@@ -162,7 +154,7 @@ class App extends React.Component{
               <Droppable droppableId='lixo'>
                 {(provided) => (
                   <div id='lixoID' {...provided.droppableProps} ref={provided.innerRef}>
-                    <img src='/imagens/lixinho.png' alt='lixinhoFoto'></img>
+                    <img src='/imagens/lixinho.png' alt='lixo' />
                     {provided.placeholder}
                   </div>
                 )}

@@ -33,7 +33,6 @@ body {
 }
 
 .fotos-thumb {
-  overflow: hidden;
   flex-shrink: 0;
   width: 4em;
   height: 4em;
@@ -57,22 +56,33 @@ body {
 }
 
 .direitaFotos {
-  margin: 0;
-  width: auto;
-  height: 5em;
   background-color: red;
-  display: 'flex';
+  display: 'grid';
   overflow: 'auto';
+  width: 90%;
+  height: 5em;
 }
 
 .direitaFotosDiv {
-  float: left;  
+  float: left; 
+  
 }
 
 .direitaFotosDiv img {
   display: block;
   width: 4em;
   height: 4em;
+}
+
+.capacitorImg {
+  width: 4em;
+  height: 4em;
+  float: right; 
+}
+
+#adicionarDiv img{
+  width: 2em;
+  height: 2em;
 }
 
 #divDoLixo {
