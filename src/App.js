@@ -1,12 +1,13 @@
 import React, {} from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import './App.css'
+import ReactDOM from 'react-dom'
 import {fotosTestes, direita} from "./dados";
 
 //biblio do ID
 import { uuid } from 'uuidv4';
 
-
+//função para organizar as listas
 const reorder = (itensD, startIndex, endIndex) => {
   const result = Array.from(itensD);
   const [removed] = result.splice(startIndex, 1);
@@ -15,6 +16,21 @@ const reorder = (itensD, startIndex, endIndex) => {
   return result;
 }
 
+//função para definir o componente 'LinhaNova' - Ainda em testes
+const LinhaNova = (props) => { return(
+              <div id="lista1DaDireita">
+                <Droppable droppableId='itens2'>
+                  {(provided) => (
+                    <div className="direitaFotos" {...provided.droppableProps} ref={provided.innerRef}>
+                      )}
+                      {provided.placeholder}
+                      <div id='divParaLinhaNova' /> 
+                    </div>
+                  )}
+                </Droppable>
+                <img className='capacitorImg' src='/imagens/capacitor.jpeg' alt='capacitor' />
+              </div>
+)}
 
 class App extends React.Component{
   constructor(props) {
@@ -33,18 +49,19 @@ class App extends React.Component{
   
   }
 
-  onDragEnd(result, itensD) {
+  onDragEnd(result) {
 
     const {source, destination} = result
     
-
+//Quando o item é dropado fora de uma droppable
     if (!result.destination) {
       return;
     } 
-    
-    else if (destination.droppableId === 'lixo') {
+
+//Quando o item é dropado no lixo - Ainda em testes
+    else if (result.destination.droppableId === 'lixo') {
       console.log(result)
-     itensD.splice(result.source.index, 1);
+     this.state.itensD.splice(result.source.index, 1);
     }
 
     const itensD = reorder(
@@ -88,11 +105,10 @@ class App extends React.Component{
 }))
   }
 
-  adicionarLinha() {
+//função para adicionar uma nova linha - Ainda em testes
+adicionarLinha() {
     console.log('testeLinha')
-    React.createElement(
-      <img src='/imagens/lixinho.png' alt='lixinhoFoto' />
-    )
+    ReactDOM.render(<LinhaNova />, document.getElementById('divParaLinhaNova'));
 
   }
 
@@ -139,6 +155,7 @@ class App extends React.Component{
                         );
                       })}
                       {provided.placeholder}
+                      <div id='divParaLinhaNova' /> 
                     </div>
                   )}
                 </Droppable>
