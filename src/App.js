@@ -1,5 +1,5 @@
 import React, {} from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, Draggable, Responders } from 'react-beautiful-dnd'
 import './App.css'
 import ReactDOM from 'react-dom'
 import {fotosTestes, direita} from "./dados";
@@ -16,13 +16,16 @@ const reorder = (itensD, startIndex, endIndex) => {
   return result;
 }
 
+const ContextoDnD = React.createContext('light');
+
 //função para definir o componente 'LinhaNova' - Ainda em testes
-const LinhaNova = (props) => { return(
+const LinhaNova = (props) => { return (
+
               <div id="lista1DaDireita">
                 <Droppable droppableId='itens2'>
                   {(provided) => (
                     <div className="direitaFotos" {...provided.droppableProps} ref={provided.innerRef}>
-                      )}
+                      )
                       {provided.placeholder}
                       <div id='divParaLinhaNova' /> 
                     </div>
@@ -30,7 +33,28 @@ const LinhaNova = (props) => { return(
                 </Droppable>
                 <img className='capacitorImg' src='/imagens/capacitor.jpeg' alt='capacitor' />
               </div>
+              
 )}
+
+class LinhaNovaClass extends React.Component {
+  render() {
+
+    return(
+      <div id="lista1DaDireita">
+                <Droppable droppableId='itens2'>
+                  {(provided) => (
+                    <div className="direitaFotos" {...provided.droppableProps} ref={provided.innerRef}>
+                      )
+                      {provided.placeholder}
+                      <div id='divParaLinhaNova' /> 
+                    </div>
+                  )}
+                </Droppable>
+                <img className='capacitorImg' src='/imagens/capacitor.jpeg' alt='capacitor' />
+      </div>
+    )
+  }
+}
 
 class App extends React.Component{
   constructor(props) {
@@ -70,6 +94,8 @@ class App extends React.Component{
       result.destination.index
     );
 
+
+
     this.setState({
       itensD,
     });
@@ -108,7 +134,8 @@ class App extends React.Component{
 //função para adicionar uma nova linha - Ainda em testes
 adicionarLinha() {
     console.log('testeLinha')
-    ReactDOM.render(<LinhaNova />, document.getElementById('divParaLinhaNova'));
+    
+    ReactDOM.render(<LinhaNova.Provider> <LinhaNova /> </LinhaNova.Provider>, document.getElementById('divParaLinhaNova'));
 
   }
 
@@ -138,7 +165,7 @@ adicionarLinha() {
               <div id="lista1DaDireita">
                 <Droppable droppableId='itens'>
                   {(provided) => (
-                    <div className="direitaFotos" {...provided.droppableProps} ref={provided.innerRef}>
+                    <div className="direitaFotos" {...provided.droppableProps} ref={provided.innerRef} isCombineEnabled='true'>
                       {this.state.itensD.map(({id, name, thumb}, index) => {
                         return (
                           <div>
