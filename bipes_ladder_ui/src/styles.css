@@ -6,12 +6,32 @@ body {
 
 .body {
     display: flex;
+    flex-direction: column;
+}
+
+.inner_body {
+    display: flex;
     flex-direction: row;
 }
 
 .head_top {
-    padding-left: 0.5em;
-    background-color: rgb(233, 229, 229);
+    height: 70px;
+    padding: 0.5em;
+    background-color: rgb(29, 92, 95);
+    display: flex;
+}
+
+.menu {
+    flex: 1;
+    color: #FFF;
+    text-align: right;
+    margin-top: 10px;
+}
+
+.head_top h2 {
+    color: #FFF;
+    margin-top: center/2;
+    margin-left: 10px;
 }
 
 .sideBar {
@@ -19,8 +39,8 @@ body {
     width: 200px;
     padding: 10px;
     border-right: 1px solid #111;
-    height: 100vh;
-    background: #e1e1e1;
+    height: 91vh;
+    background: #d6e4df;
 }
 
 .sideBarItem {
@@ -33,7 +53,6 @@ body {
 }
 
 .page {
-    flex: 1 1 auto;
     padding: 0 20px;
     margin: 20px;
     border: 1px solid green;
@@ -117,7 +136,7 @@ body {
 
 .pageContainer {
     display: flex;
-    flex: 1;
+    width: 100%;
     flex-direction: column;
     margin-bottom: 100px;
 }
