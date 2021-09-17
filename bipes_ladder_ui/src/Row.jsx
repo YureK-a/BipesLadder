@@ -5,7 +5,7 @@ import DropZone from "./DropZone";
 import Column from "./Column";
 import OutputDropZone from "./OutputDropZone"
 
-const style = {border: "1px dashed black"};
+const style = {};
 const columns_per_row = 5;
 const Row = ({ data, components, handleDrop, path }) => {
   const ref = useRef(null);
@@ -26,7 +26,7 @@ const Row = ({ data, components, handleDrop, path }) => {
   drag(ref);
 
   const renderColumn = (column, currentPath) => {
-    console.log(currentPath);
+
     return (
       <Column
         key={column.id}
@@ -38,9 +38,7 @@ const Row = ({ data, components, handleDrop, path }) => {
     );
   };
 
-  
-
-  return (
+    return (
     <div ref={ref} style={{ ...style, opacity }} className="base draggable row">
       
       <div className="columns">
@@ -53,7 +51,7 @@ const Row = ({ data, components, handleDrop, path }) => {
               <DropZone
                 data={{
                   path: currentPath,
-                  childrenCount: columns_per_row,
+                  childrenCount: data.children.length,
                   drawLine: true
                 }}
                 onDrop={handleDrop}

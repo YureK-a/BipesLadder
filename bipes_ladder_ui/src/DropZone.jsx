@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { useDrop } from "react-dnd";
 import { COMPONENT, SIDEBAR_ITEM, ROW, COLUMN } from "./constants";
 
-const ACCEPTS = [SIDEBAR_ITEM, COMPONENT, ROW, COLUMN];
+const ACCEPTS = [SIDEBAR_ITEM, ROW, COLUMN, COMPONENT];
 
 const style = {};
 
@@ -18,11 +18,12 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
       const splitDropZonePath = dropZonePath.split("-");
       const itemPath = item.path;
 
+
       // sidebar items can always be dropped anywhere
       if (!itemPath) {
-        // if (data.childrenCount >= 3) {
-        //  return false;
-        // }
+        if (data.childrenCount >= 7) {
+          return false;
+         }
         return true;
       }
 
@@ -35,7 +36,7 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
       if (
         diffRow &&
         splitDropZonePath.length === 2 &&
-        data.childrenCount >= 3
+        data.childrenCount >= 2
       ) {
         return false;
       }
@@ -72,7 +73,7 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
   var svg_line = "";
   var width_dropzone = 120; 
   if (data.drawLine){
-    svg_line = "M0 59 L150 59";
+    svg_line = "M0 58 L150 58";
 
   }
 
@@ -93,11 +94,13 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
       ref={drop}
       style={{ ...style }}
     >
+
     <svg height="70" width={width_dropzone}>
         <g fill="none" stroke="black">
           <path stroke-width="3" d={svg_line} fill="none" />
         </g>
       </svg>
+   
       
     </div>
     

@@ -20,6 +20,12 @@ const SideBarItem = ({ data }) => {
       if(data.component.content == 'coil'){
         svg_elements = ['M0 30 L30 30 L30 50 L50 50 L50 10 L30 10 L30 30 M50 30 L80 30']
       }
+      else{
+        if(data.component.content == 'line'){
+          svg_elements = ['M0 30 L80 30']
+        }
+
+      }
     }
   }
    

@@ -36,7 +36,7 @@ export const SIDEBAR_ITEMS_OTHER = [{
     id: shortid.generate(),
     type: SIDEBAR_ITEM,
     component: {
-        type: "+",
-        content: ROW
+        type: "",
+        content: "line"
     }
 }];

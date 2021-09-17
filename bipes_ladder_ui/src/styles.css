@@ -1,3 +1,10 @@
+elements {
+    --bg-color: rgb(256, 256, 256);
+    --dot-color: rgb(256, 33, 70);
+    --dot-size: 1px;
+    --dot-space: 22px;
+}
+
 html,
 body {
     margin: 0;
@@ -26,6 +33,7 @@ body {
     color: #FFF;
     text-align: right;
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .head_top h2 {
@@ -54,8 +62,12 @@ body {
 
 .page {
     padding: 0 20px;
-    margin: 20px;
-    border: 1px solid green;
+    height: 100%;
+    border: 1px solid black;
+    background-color: #fff;
+    background-image: radial-gradient(circle, rgb(136, 132, 132) 1%, transparent 0%), radial-gradient(circle, rgb(136, 132, 132) 1%, transparent 10%);
+    background-size: 50px 50px;
+    background-position: 0 0, 0px 50px;
 }
 
 .dropZone {
@@ -79,7 +91,7 @@ body {
 
 .dropZone.active,
 .trashDropZone.active {
-    background: #00a2ff;
+    background: #1faa3d;
     transition: 100ms all;
 }
 
@@ -110,12 +122,12 @@ body {
     padding: 0;
     z-index: 0;
     border-left: 3px solid rgb(0, 0, 0);
+    border-right: 3px solid rgb(0, 0, 0);
 }
 
 .trashDropZone {
     position: relative;
     text-align: center;
-    padding: 20px 0;
     margin: 0 auto;
     width: 100px;
     height: 100px;

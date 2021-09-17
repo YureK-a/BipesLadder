@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 
 import DropZone from "./DropZone";
 import TrashDropZone from "./TrashDropZone";
@@ -22,11 +22,21 @@ import {
 } from "./constants";
 import shortid from "shortid";
 
-const Container = () => {
+import ReactDOM from "react-dom";
+import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
+import NavigationIcon from "@material-ui/icons/Navigation";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
+
+function Container() {
   const initialLayout = initialData.layout;
   const initialComponents = initialData.components;
   const [layout, setLayout] = useState(initialLayout);
   const [components, setComponents] = useState(initialComponents);
+  const firstTime = true;
 
   const handleDropToTrashBin = useCallback(
     (dropZone, item) => {
@@ -36,12 +46,17 @@ const Container = () => {
     [layout]
   );
 
+  const handleDropNewLine = useCallback((dropZone, item) => {
+    console.log("dropZone", dropZone);
+    console.log("item", item);
+  });
+
   const handleDrop = useCallback(
     (dropZone, item) => {
       console.log("dropZone", dropZone);
-      console.log("item", item);
 
       const splitDropZonePath = dropZone.path.split("-");
+
       const pathToDropZone = splitDropZonePath.slice(0, -1).join("-");
 
       const newItem = { id: item.id, type: item.type };
@@ -77,6 +92,8 @@ const Container = () => {
       // move down here since sidebar items dont have path
       const splitItemPath = item.path.split("-");
       const pathToItem = splitItemPath.slice(0, -1).join("-");
+
+      console.log(splitItemPath);
 
       // 2. Pure move (no create)
       if (splitItemPath.length === splitDropZonePath.length) {
@@ -126,21 +143,49 @@ const Container = () => {
     );
   };
 
+  const addnewLine = useCallback(() => {
+    var itens = [
+      components.component1,
+      components.component1,
+      components.component1,
+      components.component1,
+      components.component1,
+      components.component0,
+    ];
+
+    let newLayout = handleMoveSidebarComponentIntoParent(
+      layout,
+      [layout.length],
+      components.component2
+    );
+    setLayout(newLayout);
+
+    itens.map((item, index) => {
+      let nextComponentLayout = handleMoveSidebarComponentIntoParent(
+        newLayout,
+        [layout.length, 0],
+        item
+      );
+      setLayout(nextComponentLayout);    
+      newLayout = nextComponentLayout;  
+      console.log(index);
+    });
+
+  
+    
+  });
+
+  //return <React.Fragment key={row.id}>{renderRow(row, 1)}</React.Fragment>;
+
   // dont use index for key when mapping over items
   // causes this issue - https://github.com/react-dnd/react-dnd/issues/342
   return (
     <div className="body">
       <div class="head_top">
-      <div style={{textAlign : "right", float : "right"}}>
-            <img src="./images/if_logo.png" width="70"></img>
-          </div>
-        <h2>Bipes Ladder</h2>
-        
-        <div class="menu">
-            <button style={{backgroundColor: "transparent", color: "white", border: "none"}}>
-              <img src="./images/play.png" width="50"></img>
-            </button>
+        <div style={{ textAlign: "right", float: "right" }}>
+          <img src="./images/if_logo.png" width="70"></img>
         </div>
+        <h2>Bipes Ladder</h2>
       </div>
       <div class="inner_body">
         <div className="sideBar">
@@ -155,32 +200,32 @@ const Container = () => {
         </div>
         <div className="pageContainer">
           <div className="page">
+            <div class="menu">
+              <Fab aria-label="add" style={{ margin: "2px" }}>
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    alert("ok");
+                  }}
+                >
+                  <PlayCircleOutlineIcon />
+                </Button>
+              </Fab>
+              <Fab aria-label="add" style={{ margin: "2px" }}>
+                <Button color="primary" onClick={addnewLine}>
+                  <AddIcon />
+                </Button>
+              </Fab>
+            </div>
             {layout.map((row, index) => {
               const currentPath = `${index}`;
 
               return (
                 <React.Fragment key={row.id}>
-                  <DropZone
-                    data={{
-                      path: currentPath,
-                      childrenCount: layout.length,
-                    }}
-                    onDrop={handleDrop}
-                    path={currentPath}
-                  />
                   {renderRow(row, currentPath)}
                 </React.Fragment>
               );
             })}
-
-            <DropZone
-              data={{
-                path: `${layout.length}`,
-                childrenCount: layout.length,
-              }}
-              onDrop={handleDrop}
-              isLast
-            />
           </div>
 
           <TrashDropZone
@@ -189,13 +234,9 @@ const Container = () => {
             }}
             onDrop={handleDropToTrashBin}
           />
-
-          
         </div>
-        
       </div>
-      
     </div>
   );
-};
+}
 export default Container;

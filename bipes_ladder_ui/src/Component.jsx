@@ -24,7 +24,8 @@ const Component = ({ data, components, path }) => {
 
   const component = components[data.id];
 
-  var svg_elements = ['M0 30 L30 30 L30 -100 L30 100','M50 30 L50 -100 L50 100 L50 30 L80 30'];
+  var svg_elements = [];
+  var color = "black";
   if (component.content == 'opened_contact'){
     svg_elements = ['M0 30 L40 30 L40 -100 L40 100','M80 30 L80 -100 L80 100 L80 30 L120 30'];
   }else{
@@ -34,6 +35,12 @@ const Component = ({ data, components, path }) => {
     else{
       if(component.content == 'coil'){
         svg_elements = ['M0 30 L40 30 L40 50 L80 50 L80 10 L40 10 L40 30 M80 30 L120 30']
+      }else{
+        if(component.content == 'line'){
+          color = "red";
+          svg_elements = ['M0 48 L120 48']
+        }
+
       }
     }
   }
@@ -46,7 +53,7 @@ const Component = ({ data, components, path }) => {
     >
       <div>{component.type}</div>
       <svg height="60" width="120">
-        <g fill="none" stroke="black">
+        <g fill="none" stroke={color}>
         {svg_elements.map(function(svg_element, index){
             return <path stroke-width="3" d={svg_element} fill="none" />
           })}

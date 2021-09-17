@@ -2,8 +2,12 @@ import React from "react";
 import classNames from "classnames";
 import { useDrop } from "react-dnd";
 import { COMPONENT, ROW, COLUMN } from "./constants";
+import DeleteIcon from '@material-ui/icons/Delete';
 
-const ACCEPTS = [ROW, COLUMN, COMPONENT];
+
+
+
+const ACCEPTS = [ROW, COMPONENT];
 
 const TrashDropZone = ({ data, onDrop }) => {
   const [{ isOver, canDrop }, drop] = useDrop({
@@ -42,7 +46,7 @@ const TrashDropZone = ({ data, onDrop }) => {
       className={classNames("trashDropZone", { active: isActive })}
       ref={drop}
     >
-      TRASH
+      <DeleteIcon/>
     </div>
   );
 };
