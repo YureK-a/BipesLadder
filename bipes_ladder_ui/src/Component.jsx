@@ -1,16 +1,33 @@
 import React, { useRef } from "react";
 import { useDrag } from "react-dnd";
 import { COMPONENT } from "./constants";
+import TextField from "@material-ui/core/TextField";
+import { Button, Modal, Box, Typography } from "@material-ui/core";
 
 const style = {
   //border: "1px dashed black",
   cursor: "move",
   textAlign: "center",
-  
-
 };
+
+const style_modal = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  display: "grid"
+};
+
 const Component = ({ data, components, path }) => {
   const ref = useRef(null);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const [{ isDragging }, drag] = useDrag({
     item: { type: COMPONENT, id: data.id, path },
@@ -24,42 +41,38 @@ const Component = ({ data, components, path }) => {
 
   const component = components[data.id];
 
-  var svg_elements = [];
-  var color = "black";
-  if (component.content == 'opened_contact'){
-    svg_elements = ['M0 30 L40 30 L40 -100 L40 100','M80 30 L80 -100 L80 100 L80 30 L120 30'];
-  }else{
-    if(component.content == 'closed_contact'){
-      svg_elements = ['M0 30 L40 30 L40 -100 L40 100','M20 -100 L80 100','M80 30 L80 -100 L80 100 L80 30 L120 30'];
-    }
-    else{
-      if(component.content == 'coil'){
-        svg_elements = ['M0 30 L40 30 L40 50 L80 50 L80 10 L40 10 L40 30 M80 30 L120 30']
-      }else{
-        if(component.content == 'line'){
-          color = "red";
-          svg_elements = ['M0 48 L120 48']
-        }
-
-      }
-    }
+  const changeProperty = () => {
+    component.type = document.getElementById("changeAddress").value;
+    setOpen(false);
   }
 
   return (
-    <div
-      ref={ref}
-      style={{ ...style, opacity }}
+    <div ref={ref} style={{ ...style, opacity }}>
+      <div>
+        <Button onClick={handleOpen}>{component.type}</Button>
+        <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style_modal}>
 
-    >
-      <div>{component.type}</div>
-      <svg height="60" width="120">
-        <g fill="none" stroke={color}>
-        {svg_elements.map(function(svg_element, index){
-            return <path stroke-width="3" d={svg_element} fill="none" />
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Parâmetros
+          </Typography><TextField id="changeAddress" label="Novo Endereço" variant="outlined" />
+          <Button onClick={changeProperty}>Salvar</Button>
+      
+        </Box>
+      </Modal>
+      </div>
+      <svg width="120px" height="70px">
+        <g fill="none" stroke={component.color}>
+          {component.svg.map(function (svg_element, index) {
+            return <path stroke-width="3" d={svg_element} fill="none" />;
           })}
         </g>
       </svg>
-     
     </div>
   );
 };

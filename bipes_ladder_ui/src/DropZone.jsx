@@ -5,7 +5,7 @@ import { COMPONENT, SIDEBAR_ITEM, ROW, COLUMN } from "./constants";
 
 const ACCEPTS = [SIDEBAR_ITEM, ROW, COLUMN, COMPONENT];
 
-const style = {};
+const style = {height:"18px"};
 
 const DropZone = ({ data, onDrop, isLast, className }) => {
   const [{ isOver, canDrop }, drop] = useDrop({
@@ -21,9 +21,9 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
 
       // sidebar items can always be dropped anywhere
       if (!itemPath) {
-        if (data.childrenCount >= 7) {
-          return false;
-         }
+        //if (data.childrenCount >= 7) {
+        //  return false;
+        // }
         return true;
       }
 
@@ -71,16 +71,12 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
   });
 
   var svg_line = "";
-  var width_dropzone = 120; 
   if (data.drawLine){
-    svg_line = "M0 58 L150 58";
-
+    svg_line = "M0 68 L150 68";
   }
 
-  var last = "";
-  if (isLast && data.drawLine){
+  if(data.isLast){
     
-
   }
 
   const isActive = isOver && canDrop;
@@ -95,7 +91,7 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
       style={{ ...style }}
     >
 
-    <svg height="70" width={width_dropzone}>
+    <svg width="100%">
         <g fill="none" stroke="black">
           <path stroke-width="3" d={svg_line} fill="none" />
         </g>

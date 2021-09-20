@@ -6,6 +6,7 @@ import Column from "./Column";
 import OutputDropZone from "./OutputDropZone"
 
 const style = {};
+
 const columns_per_row = 5;
 const Row = ({ data, components, handleDrop, path }) => {
   const ref = useRef(null);
@@ -37,6 +38,8 @@ const Row = ({ data, components, handleDrop, path }) => {
       />
     );
   };
+  const width = "3px"
+  
 
     return (
     <div ref={ref} style={{ ...style, opacity }} className="base draggable row">
@@ -48,15 +51,9 @@ const Row = ({ data, components, handleDrop, path }) => {
 
           return (
             <React.Fragment key={column.id}>
-              <DropZone
-                data={{
-                  path: currentPath,
-                  childrenCount: data.children.length,
-                  drawLine: true
-                }}
-                onDrop={handleDrop}
-                className="horizontalDrag"
-              />
+              
+             
+         
               {renderColumn(column, currentPath)}
             </React.Fragment>
           );

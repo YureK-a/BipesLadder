@@ -9,7 +9,7 @@ const initialData = {
                     id: "component0",
                     children: [{
                         type: COMPONENT,
-                        id: "component0",
+                        id: "openedContactComponent",
 
                     }]
                 },
@@ -18,7 +18,7 @@ const initialData = {
                     id: "column1",
                     children: [{
                         type: COMPONENT,
-                        id: "component1"
+                        id: "lineComponent"
                     }]
                 },
                 {
@@ -26,7 +26,7 @@ const initialData = {
                     id: "column2",
                     children: [{
                         type: COMPONENT,
-                        id: "component1"
+                        id: "lineComponent"
                     }]
                 },
                 {
@@ -34,7 +34,7 @@ const initialData = {
                     id: "column3",
                     children: [{
                         type: COMPONENT,
-                        id: "component1"
+                        id: "lineComponent"
                     }]
                 },
                 {
@@ -42,7 +42,7 @@ const initialData = {
                     id: "column3",
                     children: [{
                         type: COMPONENT,
-                        id: "component1"
+                        id: "lineComponent"
                     }]
                 },
                 {
@@ -50,15 +50,73 @@ const initialData = {
                     id: "column3",
                     children: [{
                         type: COMPONENT,
-                        id: "component1"
+                        id: "lineComponent"
                     }]
                 },
+                {
+                    type: COLUMN,
+                    id: "column1",
+                    children: [{
+                        type: COMPONENT,
+                        id: "lineComponent"
+                    }]
+                },
+                {
+                    type: COLUMN,
+                    id: "column2",
+                    children: [{
+                        type: COMPONENT,
+                        id: "lineComponent"
+                    }]
+                },
+                {
+                    type: COLUMN,
+                    id: "column3",
+                    children: [{
+                        type: COMPONENT,
+                        id: "lineComponent"
+                    }]
+                },
+                {
+                    type: COLUMN,
+                    id: "column3",
+                    children: [{
+                        type: COMPONENT,
+                        id: "lineComponent"
+                    }]
+                },
+                {
+                    type: COLUMN,
+                    id: "column3",
+                    children: [{
+                        type: COMPONENT,
+                        id: "lineComponent"
+                    }]
+                },
+                {
+                    type: COLUMN,
+                    id: "column3",
+                    children: [{
+                        type: COMPONENT,
+                        id: "lineComponent"
+                    }]
+                },
+                {
+                    type: COLUMN,
+                    id: "column3",
+                    children: [{
+                        type: COMPONENT,
+                        id: "lineComponent"
+                    }]
+                },
+
+
                 {
                     type: COLUMN,
                     id: "column7",
                     children: [{
                         type: COMPONENT,
-                        id: "component2"
+                        id: "coilComponent"
                     }]
                 }
             ]
@@ -67,9 +125,10 @@ const initialData = {
 
     ],
     components: {
-        component0: { id: "component0", type: "I0.0", content: "opened_contact" },
-        component1: { id: "component1", type: "", content: "line" },
-        component2: { id: "component2", type: "O0.0", content: "coil" }
+        openedContactComponent: { id: "openedContactComponent", type: "I0.0", content: "opened_contact", svg: ['M0 30 L40 30 L40 -100 L40 100', 'M80 30 L80 -100 L80 100 L80 30 L120 30'], color: "black" },
+        closedContactComponent: { id: "closedContactComponent", type: "I0.0", content: "closed_contact", svg: ['M0 30 L30 30 L30 -100 L30 100', ' M20 -100 L50 100', 'M50 30 L50 -100 L50 100 L50 30 L80 30'], color: "black" },
+        lineComponent: { id: "lineComponent", type: "", content: "line", svg: ['M0 48 L120 48'], color: "red" },
+        coilComponent: { id: "coilComponent", type: "O0.0", content: "coil", svg: ['M0 30 L40 30 L40 50 L80 50 L80 10 L40 10 L40 30 M80 30 L120 30'], color: "black" }
     }
 };
 

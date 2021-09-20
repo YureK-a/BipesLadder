@@ -17,8 +17,10 @@ import {
   SIDEBAR_ITEMS,
   SIDEBAR_ITEMS_OTHER,
   SIDEBAR_ITEM,
+  ITEMS_CHANGED,
   COMPONENT,
   COLUMN,
+  ITEM_CHANGED,
 } from "./constants";
 import shortid from "shortid";
 
@@ -145,18 +147,25 @@ function Container() {
 
   const addnewLine = useCallback(() => {
     var itens = [
-      components.component1,
-      components.component1,
-      components.component1,
-      components.component1,
-      components.component1,
-      components.component0,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.lineComponent,
+      components.openedContactComponent,
     ];
 
     let newLayout = handleMoveSidebarComponentIntoParent(
       layout,
       [layout.length],
-      components.component2
+      components.coilComponent
     );
     setLayout(newLayout);
 
@@ -166,13 +175,10 @@ function Container() {
         [layout.length, 0],
         item
       );
-      setLayout(nextComponentLayout);    
-      newLayout = nextComponentLayout;  
+      setLayout(nextComponentLayout);
+      newLayout = nextComponentLayout;
       console.log(index);
     });
-
-  
-    
   });
 
   //return <React.Fragment key={row.id}>{renderRow(row, 1)}</React.Fragment>;
@@ -197,6 +203,7 @@ function Container() {
           {Object.values(SIDEBAR_ITEMS_OTHER).map((sideBarItem, index) => (
             <SideBarItem key={sideBarItem.id} data={sideBarItem} />
           ))}
+          
         </div>
         <div className="pageContainer">
           <div className="page">
@@ -217,6 +224,7 @@ function Container() {
                 </Button>
               </Fab>
             </div>
+
             {layout.map((row, index) => {
               const currentPath = `${index}`;
 
@@ -234,6 +242,9 @@ function Container() {
             }}
             onDrop={handleDropToTrashBin}
           />
+          <div className="pageTest">
+           
+          </div>
         </div>
       </div>
     </div>
