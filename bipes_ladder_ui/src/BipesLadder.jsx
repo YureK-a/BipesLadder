@@ -11,6 +11,8 @@ import {
   handleMoveToDifferentParent,
   handleMoveSidebarComponentIntoParent,
   handleRemoveItemFromLayout,
+  parseJSON,
+  createJSON,
 } from "./helpers";
 
 import {
@@ -21,6 +23,7 @@ import {
   COMPONENT,
   COLUMN,
   ITEM_CHANGED,
+  STANDARD_COMPONENT,
 } from "./constants";
 import shortid from "shortid";
 
@@ -32,37 +35,48 @@ import EditIcon from "@material-ui/icons/Edit";
 import NavigationIcon from "@material-ui/icons/Navigation";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
+import { Component } from "react";
+
+import Column, { parallelLines } from "./Column";
 
 function Container() {
   const initialLayout = initialData.layout;
   const initialComponents = initialData.components;
   const [layout, setLayout] = useState(initialLayout);
   const [components, setComponents] = useState(initialComponents);
-  const firstTime = true;
+  const [address, setAddress] = useState([]);
+  var addressArray = [];
+
+  const addressFromRow = (addresses) => {
+    //addressArray.push(addresses[0]);
+    setAddress(addresses);
+    console.log(address);
+  };
 
   const handleDropToTrashBin = useCallback(
     (dropZone, item) => {
+      console.log(item.path);
       const splitItemPath = item.path.split("-");
       setLayout(handleRemoveItemFromLayout(layout, splitItemPath));
+      address.map((row, index) => {
+        console.log(row);
+        if (row.args.path == item.path) {
+          address.splice(index);
+        }
+      });
     },
     [layout]
   );
 
-  const handleDropNewLine = useCallback((dropZone, item) => {
-    console.log("dropZone", dropZone);
-    console.log("item", item);
-  });
-
   const handleDrop = useCallback(
     (dropZone, item) => {
-      console.log("dropZone", dropZone);
-
       const splitDropZonePath = dropZone.path.split("-");
 
       const pathToDropZone = splitDropZonePath.slice(0, -1).join("-");
+      console.log(splitDropZonePath);
 
-      const newItem = { id: item.id, type: item.type };
-      if (item.type === COLUMN) {
+      const newItem = { id: shortid.generate(), type: item.type };
+      if (item.type === COMPONENT) {
         newItem.children = item.children;
       }
 
@@ -76,6 +90,8 @@ function Container() {
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
+          row: splitDropZonePath[2],
+          column: splitDropZonePath[1],
         };
         setComponents({
           ...components,
@@ -94,8 +110,6 @@ function Container() {
       // move down here since sidebar items dont have path
       const splitItemPath = item.path.split("-");
       const pathToItem = splitItemPath.slice(0, -1).join("-");
-
-      console.log(splitItemPath);
 
       // 2. Pure move (no create)
       if (splitItemPath.length === splitDropZonePath.length) {
@@ -141,9 +155,167 @@ function Container() {
         handleDrop={handleDrop}
         components={components}
         path={currentPath}
+        addressFromRow={addressFromRow}
       />
     );
   };
+
+  function checkParallelLines(row) {
+    const linePairs = [];
+    var initialLine = 0;
+    var parallelLinesOrdered = [];
+    console.log(parallelLines);
+    parallelLines[row].map((path, index) => {
+      if (path != "") {
+        const splitItemPath = path.split("-");
+        const pathToItem = splitItemPath[1];
+        parallelLinesOrdered.push(Number(pathToItem));
+        parallelLinesOrdered.sort(function (a, b) {
+          return a - b;
+        });
+        console.log(parallelLinesOrdered);
+      }
+    });
+
+    parallelLinesOrdered.map((pathOrdererd, index) => {
+      if (pathOrdererd > initialLine) {
+        linePairs.push([initialLine, pathOrdererd]);
+        initialLine = pathOrdererd;
+      }
+    });
+    return linePairs;
+  }
+
+  function splitPath(path) {
+    var splittedPath = path.split("-");
+    if (path == "") return -1;
+    return {
+      line: splittedPath[0],
+      column: splittedPath[1],
+      row: splittedPath[2],
+    };
+  }
+
+  function joinPath(row, column, line) {
+    return line + "-" + column + "-" + row;
+  }
+
+  function operation(op, firstComponent, secondComponent) {
+    if (firstComponent.row == -1) return secondComponent;
+    if (secondComponent.row == -1) return firstComponent;
+    const row = firstComponent.row;
+    const address =
+      "(" +
+      firstComponent.args.address +
+      op +
+      secondComponent.args.address +
+      ")";
+    const splittedPathFirstComponent = splitPath(firstComponent.args.path);
+    const splittedPathSecondComponent = splitPath(secondComponent.args.path);
+    const path = joinPath(
+      Math.min(
+        splittedPathFirstComponent.row,
+        splittedPathSecondComponent.row
+      ),
+      Math.min(
+        splittedPathFirstComponent.column,
+        splittedPathSecondComponent.column
+      ),
+      splittedPathFirstComponent.line
+    );
+    const type = op + "_operation";
+    const newComponent = {
+      row: row,
+      args: {
+        address: address,
+        path: path,
+        type: type,
+      },
+    };
+    return newComponent;
+  }
+
+  function sortAddressByPath(address, row) {
+    var newAddress = new Array(2)
+      .fill(STANDARD_COMPONENT)
+      .map(() => new Array(13).fill(STANDARD_COMPONENT));
+    console.info(newAddress);
+    let line = [];
+    address.map((component, index) => {
+      if (component.args != "" && component.row == row) {
+        const row = splitPath(component.args.path).row;
+        const col = splitPath(component.args.path).column;
+        console.log(row, col);
+        newAddress[row][col] = component;
+      }
+    });
+
+    return newAddress;
+  }
+
+  function getExpression(linePairs, row) {
+    let addressOrdered = sortAddressByPath(address, row);
+    let expression = STANDARD_COMPONENT;
+    let componentsIntoLinePair = [];
+
+    if (linePairs.length > 0) {
+      console.log("Parallel Lines", linePairs, row);
+      linePairs.map((pair, index) => {
+        componentsIntoLinePair = [];
+        for (let row = 0; row < 2; row++) {
+          expression = STANDARD_COMPONENT;
+          for (let col = pair[0]; col < pair[1]; col++) {
+            if (addressOrdered[row][col].row == -1) break;
+            console.log(row, col);
+            expression = operation("*", addressOrdered[row][col], expression);
+
+            addressOrdered[row][col] = STANDARD_COMPONENT;
+            const newPath = expression.args.path;
+            addressOrdered[splitPath(newPath).row][splitPath(newPath).column] =
+              expression;
+          }
+          componentsIntoLinePair.push(expression);
+          console.log(componentsIntoLinePair);
+        }
+
+        expression = STANDARD_COMPONENT;
+        componentsIntoLinePair.map((component, index) => {
+          expression = operation("+", component, expression);
+        });
+        console.log(expression);
+        const newPath = expression.args.path;
+        console.log(newPath, "teste");
+        if (splitPath(newPath) != -1) {
+          const row = splitPath(newPath).row;
+          const col = splitPath(newPath).column;
+
+          addressOrdered[col][row] = expression;
+          console.log(addressOrdered);
+        }
+      });
+    }
+    
+    expression = STANDARD_COMPONENT;
+    addressOrdered[0].map((component, index) => {
+      console.log(component, expression);
+      expression = operation("*", component, expression);
+    });
+    return expression.args.address;
+  }
+
+  const generateCode = useCallback(() => {
+    let finalExpression = [];
+
+    layout.map((row, rowIndex) => {
+      var linePairs = checkParallelLines(rowIndex);
+      console.log(linePairs);
+      let obj = {};
+      obj.row = rowIndex;
+      obj.expression = getExpression(linePairs, rowIndex);
+      finalExpression.push(obj);
+    });
+    alert(createJSON(finalExpression));
+  });
 
   const addnewLine = useCallback(() => {
     var itens = [
@@ -177,7 +349,6 @@ function Container() {
       );
       setLayout(nextComponentLayout);
       newLayout = nextComponentLayout;
-      console.log(index);
     });
   });
 
@@ -203,18 +374,12 @@ function Container() {
           {Object.values(SIDEBAR_ITEMS_OTHER).map((sideBarItem, index) => (
             <SideBarItem key={sideBarItem.id} data={sideBarItem} />
           ))}
-          
         </div>
         <div className="pageContainer">
           <div className="page">
             <div class="menu">
               <Fab aria-label="add" style={{ margin: "2px" }}>
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    alert("ok");
-                  }}
-                >
+                <Button color="primary" onClick={generateCode}>
                   <PlayCircleOutlineIcon />
                 </Button>
               </Fab>
@@ -230,6 +395,16 @@ function Container() {
 
               return (
                 <React.Fragment key={row.id}>
+                  <div
+                    class="style_modal"
+                    style={{
+                      border: "1px solid #000",
+                      marginBottom: "10px",
+                      padding: "5px",
+                    }}
+                  >
+                    Linha {layout.length}
+                  </div>
                   {renderRow(row, currentPath)}
                 </React.Fragment>
               );
@@ -242,9 +417,7 @@ function Container() {
             }}
             onDrop={handleDropToTrashBin}
           />
-          <div className="pageTest">
-           
-          </div>
+          <div className="pageTest"></div>
         </div>
       </div>
     </div>

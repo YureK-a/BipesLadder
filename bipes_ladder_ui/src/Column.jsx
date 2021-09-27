@@ -6,8 +6,9 @@ import Component from "./Component";
 import zIndex from "@material-ui/core/styles/zIndex";
 
 const style = {};
-const parallelLines = [];
-const Column = ({ data, components, handleDrop, path }) => {
+let rowPath;
+const parallelLines = new Array(5).fill("").map(() => new Array(13).fill(""));
+const Column = ({ data, components, handleDrop, path, addressFromComponent }) => {
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
@@ -26,12 +27,14 @@ const Column = ({ data, components, handleDrop, path }) => {
   drag(ref);
 
   const renderComponent = (component, currentPath) => {
+    rowPath = currentPath;
     return (
       <Component
         key={component.id}
         data={component}
         components={components}
         path={currentPath}
+        addressFromComponent={addressFromComponent}
       />
     );
   };
@@ -47,22 +50,21 @@ const Column = ({ data, components, handleDrop, path }) => {
     
   };
 
-  function showLine(path){
-    console.log(path);
-    if(checkIfwasSelected(path)){
+  function showLine(path, rowPath){
+    console.log(rowPath);
+    const row = rowPath.split("-")[0];
+    if(checkIfwasSelected(path, row)){
       document.getElementById("parallel_line-"+path).style.backgroundColor="#dee0de";  
-      parallelLines.splice(parallelLines.indexOf(path));
+      parallelLines[row].splice(parallelLines[row].indexOf(path));
     }else{
       document.getElementById("parallel_line-"+path).style.backgroundColor="Black";  
-      parallelLines.push(path);
+      parallelLines[row].push(path);
       
-    }
-    
-    
+    }    
   }
 
-  function checkIfwasSelected(path){
-    return parallelLines.includes(path);
+  function checkIfwasSelected(path, row){
+    return parallelLines[row].includes(path);
   }
 
   return (
@@ -73,7 +75,7 @@ const Column = ({ data, components, handleDrop, path }) => {
     >
       {data.children.map((component, index) => {
         const currentPath = `${path}-${index}`;
-
+        
         return (
           
           <React.Fragment key={component.id}>
@@ -102,8 +104,9 @@ const Column = ({ data, components, handleDrop, path }) => {
         onDrop={handleDrop}
         isLast
       />
-      <div id={"parallel_line-"+path} style={style_vertical_div} onClick={() => showLine(path)}></div>
+      <div id={"parallel_line-"+path} style={style_vertical_div} onClick={() => showLine(path, rowPath)}></div>
     </div>
   );
 };
 export default Column;
+export {parallelLines};

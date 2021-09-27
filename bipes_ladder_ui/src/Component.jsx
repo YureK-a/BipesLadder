@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useDrag } from "react-dnd";
 import { COMPONENT } from "./constants";
 import TextField from "@material-ui/core/TextField";
@@ -20,14 +20,15 @@ const style_modal = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-  display: "grid"
+  display: "grid",
 };
 
-const Component = ({ data, components, path }) => {
+const Component = ({ data, components, path, addressFromComponent }) => {
   const ref = useRef(null);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [address, setAddress] = React.useState("");
 
   const [{ isDragging }, drag] = useDrag({
     item: { type: COMPONENT, id: data.id, path },
@@ -42,29 +43,48 @@ const Component = ({ data, components, path }) => {
   const component = components[data.id];
 
   const changeProperty = () => {
-    component.type = document.getElementById("changeAddress").value;
+    setAddress(document.getElementById("changeAddress").value);
+
     setOpen(false);
-  }
+  };
+
+  useEffect(() => {
+    if (component.id != "lineComponent" && address != "") {
+      //setAddress(component.type);
+      //console.log(address);
+      //addressFromComponent([address, path, component.content]);
+      addressFromComponent({
+        address: address,
+        path: path,
+        type: component.content,
+      });
+    }
+  }, [address]);
 
   return (
     <div ref={ref} style={{ ...style, opacity }}>
       <div>
-        <Button onClick={handleOpen}>{component.type}</Button>
+        <Button id="btAddress" onClick={handleOpen}>
+          {address}
+        </Button>
         <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style_modal}>
-
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Parâmetros
-          </Typography><TextField id="changeAddress" label="Novo Endereço" variant="outlined" />
-          <Button onClick={changeProperty}>Salvar</Button>
-      
-        </Box>
-      </Modal>
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style_modal}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Parâmetros
+            </Typography>
+            <TextField
+              id="changeAddress"
+              label="Novo Endereço"
+              variant="outlined"
+            />
+            <Button onClick={changeProperty}>Salvar</Button>
+          </Box>
+        </Modal>
       </div>
       <svg width="120px" height="70px">
         <g fill="none" stroke={component.color}>
