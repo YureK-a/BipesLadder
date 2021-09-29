@@ -186,6 +186,7 @@ function Container() {
         initialLine = pathOrdererd;
       }
     });
+
     return linePairs;
   }
 
@@ -265,7 +266,11 @@ function Container() {
         for (let row = 0; row < 2; row++) {
           expression = STANDARD_COMPONENT;
           for (let col = pair[0]; col < pair[1]; col++) {
-            if (addressOrdered[row][col].row == -1) break;
+            if (
+              addressOrdered[row][col].row == -1 ||
+              addressOrdered[row][col].args.type == "coil"
+            )
+              break;
             console.log(row, col);
             expression = operation("*", addressOrdered[row][col], expression);
 
@@ -281,6 +286,7 @@ function Container() {
         expression = STANDARD_COMPONENT;
         componentsIntoLinePair.map((component, index) => {
           expression = operation("+", component, expression);
+          console.log(expression);
         });
         console.log(expression);
         const newPath = expression.args.path;
@@ -289,29 +295,45 @@ function Container() {
           const row = splitPath(newPath).row;
           const col = splitPath(newPath).column;
 
-          addressOrdered[col][row] = expression;
+          addressOrdered[row][col] = expression;
           console.log(addressOrdered);
         }
       });
     }
-
+    let output = [];
     expression = STANDARD_COMPONENT;
     addressOrdered[0].map((component, index) => {
-      console.log(component, expression);
-      expression = operation("*", component, expression);
+      if (component.args.type != "coil") {
+        console.log(component, expression);
+        expression = operation("*", component, expression);
+      }
     });
-    return expression.args.address;
+    for (let index = 0; index < addressOrdered.length; index++) {
+      const lineAddressOrderedLength = addressOrdered[0].length;
+      let comp = addressOrdered[index][lineAddressOrderedLength - 1];
+      if (comp != undefined) {
+        output.push(comp);
+      }
+    }
+
+    return [expression.args.address, output];
   }
 
   const generateCode = useCallback(() => {
     let finalExpression = [];
 
     layout.map((row, rowIndex) => {
+      let outs = [];
       var linePairs = checkParallelLines(rowIndex);
       console.log(linePairs);
       let obj = {};
       obj.row = rowIndex;
-      obj.expression = getExpression(linePairs, rowIndex);
+      var [expression, outputs] = getExpression(linePairs, rowIndex);
+      obj.expression = expression;
+      outputs.map((output, index) => {
+        outs.push(output.args.address);
+      });
+      obj.outputs = outs;
 
       finalExpression.push(obj);
     });
