@@ -46,7 +46,7 @@ const TrashDropZone = ({ data, onDrop }) => {
       className={classNames("trashDropZone", { active: isActive })}
       ref={drop}
     >
-      <DeleteIcon/>
+      <DeleteIcon/> SOLTE COMPONENTES AQUI PARA EXCLUIR
     </div>
   );
 };

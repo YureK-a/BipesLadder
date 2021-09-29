@@ -128,12 +128,14 @@ body {
     position: relative;
     text-align: center;
     margin: 0 auto;
-    width: 100px;
+    width: 400px;
     height: 100px;
-    border: 1px solid purple;
+    border: 1px dashed rgb(21, 116, 50);
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 5px;
+    background-color: snow;
 }
 
 .outputDropZone {

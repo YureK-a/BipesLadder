@@ -31,11 +31,14 @@ import ReactDOM from "react-dom";
 import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import EditIcon from "@material-ui/icons/Edit";
 import NavigationIcon from "@material-ui/icons/Navigation";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
+import ClearAllIcon from "@material-ui/icons/ClearAll";
 import { Component } from "react";
+import IconButton from "@material-ui/core/IconButton";
 
 import Column, { parallelLines } from "./Column";
 
@@ -213,10 +216,7 @@ function Container() {
     const splittedPathFirstComponent = splitPath(firstComponent.args.path);
     const splittedPathSecondComponent = splitPath(secondComponent.args.path);
     const path = joinPath(
-      Math.min(
-        splittedPathFirstComponent.row,
-        splittedPathSecondComponent.row
-      ),
+      Math.min(splittedPathFirstComponent.row, splittedPathSecondComponent.row),
       Math.min(
         splittedPathFirstComponent.column,
         splittedPathSecondComponent.column
@@ -294,7 +294,7 @@ function Container() {
         }
       });
     }
-    
+
     expression = STANDARD_COMPONENT;
     addressOrdered[0].map((component, index) => {
       console.log(component, expression);
@@ -312,9 +312,15 @@ function Container() {
       let obj = {};
       obj.row = rowIndex;
       obj.expression = getExpression(linePairs, rowIndex);
+
       finalExpression.push(obj);
     });
     alert(createJSON(finalExpression));
+  });
+
+  const clearAllComponents = useCallback(() => {
+    const layout = [];
+    setLayout(layout);
   });
 
   const addnewLine = useCallback(() => {
@@ -362,15 +368,28 @@ function Container() {
         <div style={{ textAlign: "right", float: "right" }}>
           <img src="./images/if_logo.png" width="70"></img>
         </div>
-        <h2>Bipes Ladder</h2>
+        <h2>BIPES LADDER</h2>
+        <div class="menu">
+          <Fab variant="extended" aria-label="add" style={{ margin: "2px" }}>
+            <IconButton color="primary" onClick={generateCode}>
+              <PlayCircleOutlineIcon /> EXECUTAR
+            </IconButton>
+          </Fab>
+
+          <Fab variant="extended" aria-label="add" style={{ margin: "2px" }}>
+            <IconButton color="primary">
+              <SaveAltIcon /> SALVAR
+            </IconButton>
+          </Fab>
+        </div>
       </div>
       <div class="inner_body">
         <div className="sideBar">
-          <h3>Contatos</h3>
+          <h3>CONTATOS</h3>
           {Object.values(SIDEBAR_ITEMS).map((sideBarItem, index) => (
             <SideBarItem key={sideBarItem.id} data={sideBarItem} />
           ))}
-          <h3>Outros</h3>
+          <h3>OUTROS</h3>
           {Object.values(SIDEBAR_ITEMS_OTHER).map((sideBarItem, index) => (
             <SideBarItem key={sideBarItem.id} data={sideBarItem} />
           ))}
@@ -379,14 +398,14 @@ function Container() {
           <div className="page">
             <div class="menu">
               <Fab aria-label="add" style={{ margin: "2px" }}>
-                <Button color="primary" onClick={generateCode}>
-                  <PlayCircleOutlineIcon />
-                </Button>
-              </Fab>
-              <Fab aria-label="add" style={{ margin: "2px" }}>
-                <Button color="primary" onClick={addnewLine}>
+                <IconButton color="secondary" onClick={addnewLine}>
                   <AddIcon />
-                </Button>
+                </IconButton>
+              </Fab>
+              <Fab aria-label="clear" style={{ margin: "2px" }}>
+                <IconButton color="secondary" onClick={clearAllComponents}>
+                  <ClearAllIcon />
+                </IconButton>
               </Fab>
             </div>
 
@@ -398,25 +417,27 @@ function Container() {
                   <div
                     class="style_modal"
                     style={{
-                      border: "1px solid #000",
+                      border: "2px solid #ABC",
+
                       marginBottom: "10px",
                       padding: "5px",
+                      backgroundColor: "lightgreen",
                     }}
                   >
-                    Linha {layout.length}
+                    LINHA {index + 1}
                   </div>
                   {renderRow(row, currentPath)}
                 </React.Fragment>
               );
             })}
+            <TrashDropZone
+              data={{
+                layout,
+              }}
+              onDrop={handleDropToTrashBin}
+            />
           </div>
 
-          <TrashDropZone
-            data={{
-              layout,
-            }}
-            onDrop={handleDropToTrashBin}
-          />
           <div className="pageTest"></div>
         </div>
       </div>
