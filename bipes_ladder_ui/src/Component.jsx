@@ -49,7 +49,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
   };
 
   useEffect(() => {
-    if (component.id != "lineComponent" && address != "") {
+    if (component.id !== "lineComponent" && address !== "") {
       //setAddress(component.type);
       //console.log(address);
       //addressFromComponent([address, path, component.content]);
@@ -87,6 +87,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
         </Modal>
       </div>
       <svg width="120px" height="70px">
+        {console.log(component)}
         <g fill="none" stroke={component.color}>
           {component.svg.map(function (svg_element, index) {
             return <path stroke-width="3" d={svg_element} fill="none" />;

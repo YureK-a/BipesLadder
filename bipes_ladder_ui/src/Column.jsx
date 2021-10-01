@@ -3,7 +3,6 @@ import { useDrag } from "react-dnd";
 import { COLUMN } from "./constants";
 import DropZone from "./DropZone";
 import Component from "./Component";
-import zIndex from "@material-ui/core/styles/zIndex";
 
 const style = {};
 let rowPath;
