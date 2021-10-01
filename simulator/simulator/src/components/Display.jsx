@@ -34,6 +34,7 @@ const Display = (props) => {
     let outs = Object.keys(outputs);
     for (let index = 0; index < outs.length; index++) {
       const out = outs[index];
+      console.log(out);
       if(outputs_[out]){
         initialOutputs[index] = "#000";
       }else{
@@ -104,7 +105,7 @@ const Display = (props) => {
           >
             Saídas
           </text>
-          {outputs.map((input, index) => {
+          {outputs.map((output, index) => {
             return (
               <rect
                 x={startPointPanel.x + 10 + 30 * index}
@@ -112,7 +113,7 @@ const Display = (props) => {
                 width="25"
                 height="40"
                 strokeWidth="1"
-                fill={input}
+                fill={output}
                 stroke="#000"
               ></rect>
             );

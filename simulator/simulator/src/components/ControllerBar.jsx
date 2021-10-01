@@ -16,6 +16,9 @@ import RestartCircle from "@mui/icons-material/RestartAltRounded";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import { styled } from '@mui/material/styles';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import Stack from '@mui/material/Stack';
 
 const ControllerBar = (props) => {
   const startPointPanel = { x: -1150, y: -200 };
@@ -25,8 +28,8 @@ const ControllerBar = (props) => {
   const [colorStop, setColorStop] = React.useState("#568");
   const [colorRestart, setColorRestart] = React.useState("#568");
   const [openMsg, setOpenMsg] = React.useState(false);
+  const [program, setProgram] = React.useState("");
 
-  const [control, setControl] = React.useState("");
 
   const handleControl = (event, newControl) => {
     console.log(newControl);
@@ -88,6 +91,39 @@ const ControllerBar = (props) => {
     props.play(play);
   };
 
+  const Input = styled('input')({
+    display: 'none',
+  });
+
+  const handleChange = e => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      console.log(e.target.result);
+      setProgram(e.target.result);
+      props.code(e.target.result);
+    }
+  }
+  
+  function UploadButtons() {
+    return (
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <label htmlFor="contained-button-file">
+          <Input accept=".json,application/json" id="contained-button-file" multiple="false" type="file" onChange={handleChange} />
+          <Button variant="primary" component="span">
+            Carregar programa
+          </Button>
+        </label>
+        <label htmlFor="icon-button-file">
+          <Input accept="image/*" id="icon-button-file" type="file" />
+          <IconButton color="primary" aria-label="upload picture" component="span">
+            <FileCopyIcon />
+          </IconButton>
+        </label>
+      </Stack>
+    );
+  }
+
   return (
     <div>
       <Divider textAlign="left">
@@ -102,7 +138,8 @@ const ControllerBar = (props) => {
         }}
       >
         <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={2}>
+          
+          <Grid container spacing={1}>
             <Grid xs={4}>
               <ToggleButtonGroup
                 size="large"

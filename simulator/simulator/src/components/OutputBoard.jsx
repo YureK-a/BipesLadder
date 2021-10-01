@@ -3,18 +3,26 @@ import Button from "./Button";
 import Light from "./Light";
 import { colorsTable } from "../utils/constants";
 import PropTypes from "prop-types";
+import {parseJSON} from "../utils/helpers"
 
 const OutputBoard = (props) => {
   const componentPosition = { x: 500, y: -800 };
   const style = {};
   let initialOutputs = Array(10).fill("transparent");
   const [outputs, setOutputs] = React.useState(initialOutputs);
+  const [code, setCode] = React.useState(parseJSON(props.code));
+  console.log(code);
+
+  let onlyOutputs = [];
+  code.outputs.map((output, index) => {
+    if(output[0] == "Q") onlyOutputs.push(output);
+  });
 
   const boardBackground = {
     x: componentPosition.x,
     y: componentPosition.y,
     width: 300,
-    height: 200*props.programmer.outputs.length + props.programmer.outputs.length * 10,
+    height: 200*onlyOutputs.length + onlyOutputs.length * 10,
     style: {
       fill: "#E0D8D3",
       stroke: "#444",
@@ -37,13 +45,16 @@ const OutputBoard = (props) => {
   }
 
   React.useEffect(() => {
-    console.log(props.outputs);
-  }, [props]);
+    console.log(props);
+    convertOutputs(props.outputs)
+  }, [props.outputs]);
+
+
 
   return (
     <g>
       <rect {...boardBackground}></rect>
-      {props.programmer.outputs.map((output, index) => {
+      {onlyOutputs.map((output, index) => {
         return (
           <g>
             <text x={componentPosition.x + 115} y={-620 + index*200} fontSize="30">
@@ -53,7 +64,7 @@ const OutputBoard = (props) => {
               position={{ x: componentPosition.x + 150, y: -700 + index*200 }}
               color={colorsTable.yellowLight}
               type="PUSH_BUTTON"
-              state={props.outputs[output]}
+              state={props.outputs[index]}
             ></Light>
           </g>
         );

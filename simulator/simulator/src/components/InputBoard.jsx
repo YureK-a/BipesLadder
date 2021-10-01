@@ -2,8 +2,10 @@ import React, { useEffect, useReducer, useState } from "react";
 import Button from "./Button";
 import Light from "./Light";
 import { colorsTable } from "../utils/constants";
-import PropTypes from "prop-types";
+import PropTypes, { func } from "prop-types";
 import { prodDependencies } from "mathjs";
+import { parseJSON } from "../utils/helpers";
+import isMuiElement from "@mui/utils/isMuiElement";
 
 let inp = [];
 let addNewInput = true;
@@ -17,9 +19,38 @@ function reducer(state, action) {
   }
 }
 
+function convertInputsToStartInputs(inputs){
+  if (inputs.length > 0) {
+    let inps = [];
+    for (let index = 0; index < inputs.length; index++) {
+      const inp = inputs[index];
+      inps.push({ address: inp, state: false });
+    }
+    console.log(inps);
+
+    return inps;
+  }
+}
+
+function ifExist(address, object){
+  return object.some(function(el) {
+    return el.address = address;
+  });
+}
+
 const InputBoard = (props) => {
-  const initialState = {data: [{ address: "I0", state: false },{ address: "I1", state: false }]};
+  const [code, setCode] = useState(parseJSON(props.code));
+  const initialState = { data: convertInputsToStartInputs(parseJSON(props.code).inputs) };
   const [state, dispatch] = useReducer(reducer, initialState);
+  console.log(props);
+
+  console.log(code);
+
+  let onlyInputs = [];
+  code.inputs.map((input, index) => {
+    if(input[0] == "I") onlyInputs.push(input);
+  });
+
 
   const inputFromButton = (input) => {
     addNewInput = true;
@@ -49,7 +80,25 @@ const InputBoard = (props) => {
     dispatch({ type: "CHANGE_STATE", data: inp });
   };
 
+  const addInternalRely = () => {
+    for (let index = 0; index < code.inputs.length; index++) {
+      const i = code.inputs[index];
+      if(i[0] == "R"){
+        for (let index = 0; index < inp.length; index++) {
+          const element = inp[index];{
+            if (element.address == i) return;
+          }
+          
+        }
+        inp.push({address:i, state: false});
+      }
+      
+    }
+  }
+
   useEffect(() => {
+    
+    addInternalRely();
     console.log(state);
     props.changeInputs(state);
   }, [state]);
@@ -58,7 +107,7 @@ const InputBoard = (props) => {
     x: -750,
     y: -800,
     width: 300,
-    height: 200*props.programmer.inputs.length + props.programmer.inputs.length * 10,
+    height: 200 * onlyInputs.length + onlyInputs.length * 10,
     style: {
       fill: "#E0D8D3",
       stroke: "#444",
@@ -66,11 +115,12 @@ const InputBoard = (props) => {
     },
   };
 
+
   return (
     <g>
       <rect {...boardBackground}></rect>
 
-      {props.programmer.inputs.map((input, index) => {
+      {onlyInputs.map((input, index) => {
         return (
           <Button
             position={{ x: -650, y: -700 + index * 200, index: index }}

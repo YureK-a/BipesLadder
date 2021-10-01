@@ -1,16 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { useDrag } from "react-dnd";
 import { ROW } from "./constants";
-import DropZone from "./DropZone";
 import Column from "./Column";
-import OutputDropZone from "./OutputDropZone"
 
-const style = {marginBottom:"70px"};
+const style = { marginBottom: "70px" };
 
-const columns_per_row = 5;
 var addressArray = [];
 const Row = ({ data, components, handleDrop, path, addressFromRow }) => {
-  
   const [address, setAddress] = React.useState("");
   const ref = useRef(null);
 
@@ -19,30 +15,27 @@ const Row = ({ data, components, handleDrop, path, addressFromRow }) => {
       type: ROW,
       id: data.id,
       children: data.children,
-      path
+      path,
     },
-    collect: monitor => ({
-      isDragging: monitor.isDragging()
-    })
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   });
 
   const opacity = isDragging ? 0 : 1;
   drag(ref);
 
   useEffect(() => {
-    
     //addressArray.push([path, address]);
-    addressArray.push({row: path, args : address});
+    addressArray.push({ row: path, args: address });
     console.log(addressArray);
   }, [address]);
 
-
-  const addressFromComponent = (addressComponent) =>{
+  const addressFromComponent = (addressComponent) => {
     setAddress(addressComponent);
   };
 
   const renderColumn = (column, currentPath) => {
-
     return (
       <Column
         key={column.id}
@@ -54,25 +47,20 @@ const Row = ({ data, components, handleDrop, path, addressFromRow }) => {
       />
     ); 
   };
-  const width = "3px"
-  
 
-    return (
+  return (
     <div ref={ref} style={{ ...style, opacity }} className="base draggable row">
       {addressFromRow(addressArray)}
       <div className="columns">
         {data.children.map((column, index) => {
           const currentPath = `${path}-${index}`;
 
-          
-
           return (
-            <React.Fragment key={column.id}>         
+            <React.Fragment key={column.id}>
               {renderColumn(column, currentPath)}
             </React.Fragment>
           );
         })}
-         
       </div>
     </div>
   );

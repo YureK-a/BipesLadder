@@ -24,7 +24,7 @@ body {
 .head_top {
     height: 70px;
     padding: 0.5em;
-    background-color: rgb(29, 92, 95);
+    background-color: rgba(13, 71, 119, 0.932);
     display: flex;
 }
 
@@ -46,9 +46,10 @@ body {
     flex: 0 0 1;
     width: 250px;
     padding: 10px;
-    border-right: 1px solid #111;
+    border-top: 1px solid rgb(0, 0, 0);
+    border-right: 1px solid rgb(0, 0, 0);
     height: 91vh;
-    background: #d6e4df;
+    background: #c4d6cc;
 }
 
 .sideBarItem {
@@ -62,7 +63,8 @@ body {
 
 .page {
     padding: 0 20px;
-    border: 1px solid black;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
     background-color: #fff;
     background-image: radial-gradient(circle, rgb(136, 132, 132) 1%, transparent 0%), radial-gradient(circle, rgb(136, 132, 132) 1%, transparent 10%);
     background-size: 50px 50px;
