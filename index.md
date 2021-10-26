@@ -1,6 +1,6 @@
-## Bipes - Ladder
+## Bipes Controladores Lógicos - Plataforma Integrada Bipes aplicada a processos de Automação Industrial
 
-O Bipes - Ladder é um projeto que vê como objetivo...
+O Bipes Controladores Lógicos é uma ferramenta que foi desenvolvida tendo como um dos principais focos a aplicação em práticas laboratoriais em instituições de ensino, diminuindo os custos de operação e aumentando a disponibilidade de equipamentos para os alunos em meio à realidade do ensino remoto.
 
 
 ### Markdown
