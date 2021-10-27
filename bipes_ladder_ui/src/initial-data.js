@@ -132,19 +132,12 @@ const initialData = {
 
     ],
     components: {
-<<<<<<< HEAD
-        openedContactComponent: { id: "openedContactComponent", type: "I 0.X", component: { content: "opened_contact", svg: ['M0 30 L40 30 L40 -100 L40 100', 'M80 30 L80 -100 L80 100 L80 30 L120 30'], color: "black", column: "0", row: "0" } },
-        closedContactComponent: { id: "closedContactComponent", type: "I0.X", component: { content: "closed_contact", svg: ['M0 30 L30 30 L30 -100 L30 100', ' M20 -100 L50 100', 'M50 30 L50 -100 L50 100 L50 30 L80 30'], color: "black" } },
-        lineComponent: { id: "lineComponent", type: "", component: { content: "line", svg: ['M0 48 L120 48'], color: "red" } },
-        coilComponent: { id: "coilComponent", type: "O0.X", component: { content: "coil", svg: ['M0 30 L40 30 L40 50 L80 50 L80 10 L40 10 L40 30 M80 30 L120 30'], color: "black", row: "0" } }
-=======
         openedContactComponent: { id: "openedContactComponent", type: "I0.X", content: "opened_contact", svg: { id: "opened_contact", style: "", path:['M0 30 L40 30 L40 -100 L40 100', 'M80 30 L80 -100 L80 100 L80 30 L120 30']} , color: 'black', column: "0", row: "0" },
         closedContactComponent: { id: "closedContactComponent", type: "I0.X", content: "closed_contact", svg: { id: "closed_contact", style: "", path:['M0 30 L40 30 L40 -100 L40 100', 'M0 -100 L90 100', 'M80 30 L80 -100 L80 100 L80 30 L120 30']} , color: 'black' },
         lineComponent: { id: "lineComponent", type: "", content: "line", svg: { id:"", style:"", path:['M0 48 L120 48']}, color: 'red' },
         timerComponent: { id: "timerComponent", type: "O0.X", content: "timer", svg: { id: "", style: "", path: ['M0 30 L30 30 L30 60 L90 60 L90 0 L30 0 L30 30 M90 30 L120 30 M60 25v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'], text:""} , color: "black"},
         counterComponent: { id: "counterComponent", type: "O0.X", content: "counter", svg: { id:"", style:"", path:['M0 30 L30 30 L30 60 L90 60 L90 0 L30 0 L30 30 M90 30 L120 30'], text:""}, color: "black"},
         coilComponent: { id: "coilComponent", type: "O0.X", content: "coil", svg: { id:"", style:"", path:['M0 30 L40 30 L40 50 L80 50 L80 10 L40 10 L40 30 M80 30 L120 30']}, color: 'black', row: "0" }
->>>>>>> CounterTimerAndBugFix
     }
 };
 

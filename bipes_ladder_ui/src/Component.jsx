@@ -61,7 +61,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
       addressFromComponent({
         address: address,
         path: path,
-        type: component.component.content,
+        type: component.content,
       });
     }
   }, [address]); 
@@ -266,14 +266,8 @@ const Component = ({ data, components, path, addressFromComponent }) => {
         </Modal>
       </div>
       <svg width="120px" height="70px">
-<<<<<<< HEAD
-        {console.log(component)}
-        <g fill="none" stroke={component.component.color}>
-          {component.component.svg.map(function (svg_element, index) {
-=======
         <g fill="none" stroke={component.color}>
           {component.svg.path.map(function (svg_element, index) {
->>>>>>> CounterTimerAndBugFix
             return <path stroke-width="3" d={svg_element} fill="none" />;
           })}
         </g>

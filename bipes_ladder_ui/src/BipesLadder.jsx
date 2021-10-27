@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import React, { useState, useCallback } from "react";
-import {evaluate} from 'mathjs';
-=======
 import React, { useState, useCallback, useEffect } from "react";
->>>>>>> CounterTimerAndBugFix
 
 import DropZone from "./DropZone";
 import TrashDropZone from "./TrashDropZone";
@@ -18,14 +13,6 @@ import {
   handleRemoveItemFromLayout,
   parseJSON,
   createJSON,
-<<<<<<< HEAD
-  setStorage,
-  getStorage,
-  getLocalStorage,
-  getAllLocalStorage,
-  parseJSON,
-=======
->>>>>>> CounterTimerAndBugFix
 } from "./helpers";
 
 import {
@@ -37,7 +24,6 @@ import {
   COLUMN,
   ITEM_CHANGED,
   STANDARD_COMPONENT,
-  COLUMN,
 } from "./constants";
 import shortid from "shortid";
 
@@ -90,10 +76,10 @@ function Container() {
       const splitDropZonePath = dropZone.path.split("-");
 
       const pathToDropZone = splitDropZonePath.slice(0, -1).join("-");
-      console.log(item);
+      console.log(splitDropZonePath);
 
       const newItem = { id: shortid.generate(), type: item.type };
-      if (item.type === COLUMN) {
+      if (item.type === COMPONENT) {
         newItem.children = item.children;
       }
 
@@ -102,23 +88,14 @@ function Container() {
         // 1. Move sidebar item into page
         const newComponent = {
           id: shortid.generate(),
-          component: {
-            ...item.component,
-          },
+          ...item.component,
         };
-<<<<<<< HEAD
-        console.log(newComponent);
-=======
      
->>>>>>> CounterTimerAndBugFix
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: {
-            row: splitDropZonePath[2],
-            column: splitDropZonePath[1],
-            color: "Black",
-          },
+          row: splitDropZonePath[2],
+          column: splitDropZonePath[1],
         };
         setComponents({
           ...components,
@@ -137,7 +114,6 @@ function Container() {
       // move down here since sidebar items dont have path
       const splitItemPath = item.path.split("-");
       const pathToItem = splitItemPath.slice(0, -1).join("-");
-      console.log(splitItemPath, pathToItem);
 
       // 2. Pure move (no create)
       if (splitItemPath.length === splitDropZonePath.length) {
@@ -297,7 +273,7 @@ function Container() {
             )
               break;
             console.log(row, col);
-            expression = operation(" and ", addressOrdered[row][col], expression);
+            expression = operation("*", addressOrdered[row][col], expression);
 
             addressOrdered[row][col] = STANDARD_COMPONENT;
             const newPath = expression.args.path;
@@ -310,7 +286,7 @@ function Container() {
 
         expression = STANDARD_COMPONENT;
         componentsIntoLinePair.map((component, index) => {
-          expression = operation(" or ", component, expression);
+          expression = operation("+", component, expression);
           console.log(expression);
         });
         console.log(expression);
@@ -330,7 +306,7 @@ function Container() {
     addressOrdered[0].map((component, index) => {
       if (component.args.type != "coil") {
         console.log(component, expression);
-        expression = operation(" and ", component, expression);
+        expression = operation("*", component, expression);
       }
     });
     for (let index = 0; index < addressOrdered.length; index++) {
@@ -346,16 +322,11 @@ function Container() {
 
   const generateCode = useCallback(() => {
     let finalExpression = [];
-<<<<<<< HEAD
-    let layoutForSave = layout;
-    
-=======
->>>>>>> CounterTimerAndBugFix
 
     layout.map((row, rowIndex) => {
       let outs = [];
       var linePairs = checkParallelLines(rowIndex);
-      
+      console.log(linePairs);
       let obj = {};
       obj.row = rowIndex;
       var [expression, outputs] = getExpression(linePairs, rowIndex);
@@ -367,21 +338,7 @@ function Container() {
 
       finalExpression.push(obj);
     });
-<<<<<<< HEAD
-    var json = createJSON(finalExpression);
-    setJsonExpression(json);
-    let scope = {
-      A: 1,
-      B: 0, 
-      C: 1
-    }
-    console.log(String(parseJSON(json)[0].expression));
-    console.log(evaluate(String(parseJSON(json)[0].expression), scope));
-    setLayout(layoutForSave);
-    alert(json);
-=======
     alert(createJSON(finalExpression));
->>>>>>> CounterTimerAndBugFix
   });
 
   const clearAllComponents = useCallback(() => {
@@ -389,36 +346,6 @@ function Container() {
     setLayout(layout);
   });
 
-<<<<<<< HEAD
-  const setLoadLayout = useCallback((loadLayout) => {
-    console.log(loadLayout);
-    setLayout(loadLayout);
-    handleCloseLoadModel();
-  });
-
-  const saveStoreFile = useCallback(() => {
-    const itemName = document.getElementById("projectName").value;
-    setStorage(itemName, JSON.stringify(layout));
-    handleCloseSaveModel();
-  });
-
-  const loadStoredFile = (index) => {
-    //const jsonTest = '{"layout": [{"row": 0, "expression":"A", "outputs":["B"]},{"row": 1, "expression":"A", "outputs":["B"]}]}'
-    const json = localStorage.key(index);
-
-    clearAllComponents();
-    //const jsonFinal = JSON.parse(json);
-    const loadLayout = JSON.parse(json);
-
-    setLoadLayout(loadLayout);
-    //jsonFinal.map((row, index) => {
-    //  console.log(row);
-    //  generateLineFromExpression(row);
-    //});
-  };
-
-=======
->>>>>>> CounterTimerAndBugFix
   const addnewLine = useCallback(() => {
     var itens = [
       components.lineComponent,
