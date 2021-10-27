@@ -1,9 +1,15 @@
 import React from "react";
 import Display from "./Display";
 import PropTypes from "prop-types";
+import { evaluate } from "mathjs";
 
 const PLC = (props) => {
   const startPointPanel = { x: -200, y: -800 };
+  const inputsFromExpression = ["I0", "I1", "I2"];
+  const expression = "(I0 and (I0 or I1))";
+  const outputFromExpression = ["Q0.0","Q0.1"];
+  const [scope, setScope] = React.useState({});
+  const [outputs, setOutputs] = React.useState({});
 
   const plcBackground = {
     x: startPointPanel.x,
@@ -17,15 +23,54 @@ const PLC = (props) => {
     },
   };
 
-  function drawPLC() {
-    let startPointString = "M" + 0 + " " + 0;
-    startPointString = startPointString + " L200 100";
-    console.log(startPointString);
-    return startPointString;
+  function isEmpty(obj) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
   }
 
+  const translateCode = () => {
+    const outs = {};
+
+    if (!isEmpty(scope)) {
+      console.log(scope);
+      for (let index = 0; index < outputFromExpression.length; index++) {
+        const output = outputFromExpression[index];
+        outs[output] = evaluate(expression, scope);
+      }
+      console.log(outs);
+
+      setOutputs(outs);
+      props.getOutputValues(outs);
+    }
+  };
+
+  function convertScope(data) {
+    let data_ = data;
+    if (typeof data == "object") {
+      data_ = { data: data.data };
+    }
+    let scope = {};
+    console.log(data_);
+    for (let index = 0; index < data_.data.length; index++) {
+      const d = data_.data[index];
+      scope[d.address] = d.state;
+    }
+    console.log(scope);
+    setScope(scope);
+  }
+
+  React.useEffect(() => {
+    let sco = props.getInputsValues;
+    console.log(sco);
+    convertScope(sco);
+  }, [props.getInputsValues]);
+
+  React.useEffect(() => {
+    console.log(scope);
+    translateCode();
+  }, [scope]);
+
   return (
-    <g >
+    <g>
       <rect {...plcBackground}></rect>
       <svg x="-200" y="-800">
         <path
@@ -138,16 +183,28 @@ const PLC = (props) => {
           r="10"
         ></circle>
       </g>
-      <Display inputs={props.inputs}></Display>
+      <Display
+        simulatorState={props.simulatorState}
+        getInputsValues={props.getInputsValues}
+        getOutputValues={outputs}
+      ></Display>
       <g transform="rotate(270,220,-525)">
-          <text x="220" y="-525" fontSize="30">CLP BIPES</text>
+        <text x="220" y="-525" fontSize="30">
+          CLP BIPES
+        </text>
       </g>
     </g>
   );
 };
 
 PLC.propType = {
-  inputs: PropTypes.array.isRequired,
-}
+  inputs: PropTypes.object.isRequired,
+  simulatorState: PropTypes.shape({
+    startedBasicSimulator: PropTypes.bool.isRequired,
+    startedProjectSimulator: PropTypes.bool.isRequired,
+    running: PropTypes.bool.isRequired,
+    inputs: PropTypes.object.isRequired,
+  }).isRequired,
+};
 
 export default PLC;

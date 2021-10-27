@@ -1,16 +1,28 @@
-import React, { Component } from "react";
+import React, { Component, useCallback } from "react";
 
 import PropTypes from "prop-types";
 import Canvas from "./components/Canvas";
+import Stack from "@mui/material/Stack";
+import ControllerBar from "./components/ControllerBar";
+import runSimulation from "./reducers/runSimulation";
 
 class App extends Component {
   render() {
     return (
-      <Canvas
-        simulatorState={this.props.simulatorState}
-        startBasicSimulator={this.props.startBasicSimulator}
-        returnToMenu={this.props.returnToMenu}
-      />
+      <Stack spacing={0}>
+        <Canvas
+          simulatorState={this.props.simulatorState}
+          startBasicSimulator={this.props.startBasicSimulator}
+          returnToMenu={this.props.returnToMenu}
+          changeInputs={this.props.changeInputs}          
+        />{" "}
+        {this.props.simulatorState.startedBasicSimulator && (
+          <ControllerBar
+            runSimulation={this.props.runSimulation}
+            stopSimulation={this.props.stopSimulation}
+          ></ControllerBar>
+        )}
+      </Stack>
     );
   }
 
@@ -18,19 +30,12 @@ class App extends Component {
     window.onresize = () => {
       const cnv = document.getElementById("simulator-canvas");
       cnv.style.width = `${window.innerWidth}px`;
-      cnv.style.height = `${window.innerHeight}px`;
+      cnv.style.height = "650px";
     };
 
     window.onresize();
   }
 }
-App.propTypes = {
-  simulatorState: PropTypes.shape({
-    startedBasicSimulator: PropTypes.bool.isRequired,
-    startedProjectSimulator: PropTypes.bool.isRequired,
-  }).isRequired,
-  startBasicSimulator: PropTypes.func.isRequired,
-  returnToMenu: PropTypes.func.isRequired,
-};
+
 
 export default App;

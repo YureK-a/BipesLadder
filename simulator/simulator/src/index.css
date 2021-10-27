@@ -3,3 +3,12 @@ body {
     overflow: hidden;
     height: 100%;
 }
+
+.svgButtons:hover {
+    fill: cadetblue;
+}
+
+.controlPanel {
+    width: auto;
+    height: 300px;
+}
