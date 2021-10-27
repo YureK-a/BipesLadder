@@ -12,6 +12,7 @@ const Button = (props) => {
   }, [pressed]);
 
   const onChange = () => {
+    if(!props.simulatorState.running) return;
     let pressColor;
     if (pressed) {
       pressColor = props.color;
@@ -22,7 +23,6 @@ const Button = (props) => {
     }
 
     setState(pressColor);
-    props.inputFromButton(pressed);
   };
 
   const textYPosition = "" + (-690 + props.position.index*200);
@@ -51,6 +51,12 @@ Button.propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
     index: PropTypes.number.isRequired
+  }).isRequired,
+  simulatorState: PropTypes.shape({
+    startedBasicSimulator: PropTypes.bool.isRequired,
+    startedProjectSimulator: PropTypes.bool.isRequired,
+    running:PropTypes.bool.isRequired,
+    inputs:PropTypes.object.isRequired
   }).isRequired,
 };
 

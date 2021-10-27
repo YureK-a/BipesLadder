@@ -5,7 +5,7 @@ export default (state, initialSimulatorState) => {
             ...initialSimulatorState,
             startedBasicSimulator: true,
             startedProjectSimulator: false,
-            running: false
+            running: true
         }
     }
 };

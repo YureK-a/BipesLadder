@@ -4,6 +4,8 @@ export default (state, initialSimulatorState) => {
         simulatorState: {
             ...initialSimulatorState,
             startedBasicSimulator: false,
+            startedProjectSimulator: false,
+            running: false
         }
     }
 };
