@@ -1,0 +1,157 @@
+elements {
+    --bg-color: rgb(256, 256, 256);
+    --dot-color: rgb(256, 33, 70);
+    --dot-size: 1px;
+    --dot-space: 22px;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+}
+
+.inner_body {
+    display: flex;
+    flex-direction: row;
+}
+
+.head_top {
+    height: 70px;
+    padding: 0.5em;
+    background-color: rgb(29, 92, 95);
+    display: flex;
+}
+
+.menu {
+    flex: 1;
+    color: #FFF;
+    text-align: right;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.head_top h2 {
+    color: #FFF;
+    margin-top: center/2;
+    margin-left: 10px;
+}
+
+.sideBar {
+    flex: 0 0 1;
+    width: 250px;
+    padding: 10px;
+    border-right: 1px solid #111;
+    height: 91vh;
+    background: #d6e4df;
+}
+
+.sideBarItem {
+    border: 1px solid #000;
+    border-radius: 3px;
+    height: fit-content;
+    padding: 10px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.page {
+    padding: 0 20px;
+    border: 1px solid black;
+    background-color: #fff;
+    background-image: radial-gradient(circle, rgb(136, 132, 132) 1%, transparent 0%), radial-gradient(circle, rgb(136, 132, 132) 1%, transparent 10%);
+    background-size: 50px 50px;
+    background-position: 0 0, 0px 50px;
+    min-height: 300px;
+}
+
+.dropZone {
+    transition: 200ms all;
+}
+
+.dropZone:nth-of-type(2n) {
+    display: none;
+}
+
+.dropZone.horizontalDrag {
+    height: auto;
+}
+
+.dropZone:not(.horizontalDrag).isLast {
+    flex: 1 1 auto;
+}
+
+.dropZone.active,
+.trashDropZone.active {
+    background: #1faa3d;
+    transition: 100ms all;
+}
+
+.component {
+    height: fit-content;
+    text-align: center;
+}
+
+.column {
+    display: grid;
+    grid-template-rows: 2px 90px 20px;
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: 120px 120px 120px 120px 120px 120px 120px 120px 120px 120px 120px 120px 120px 120px;
+    padding: 0;
+    height: fit-content;
+}
+
+.columnContainer {
+    display: flex;
+}
+
+.base {
+    cursor: move;
+}
+
+.row {
+    display: grid;
+    padding: 0;
+    border-left: 3px solid rgb(0, 0, 0);
+    border-right: 3px solid rgb(0, 0, 0);
+}
+
+.trashDropZone {
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+    width: 400px;
+    height: 100px;
+    border: 1px dashed rgb(21, 116, 50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+    background-color: snow;
+}
+
+.outputDropZone {
+    text-align: center;
+    padding: 20px 0;
+    margin: 0 auto;
+    border: 1px solid purple;
+    align-items: center;
+    float: right;
+}
+
+.pageContainer {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin-bottom: 100px;
+}
+
+.parallel_column {}
