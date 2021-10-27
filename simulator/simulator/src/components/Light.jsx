@@ -14,7 +14,7 @@ const Light = (props) => {
   const onChange = () => {
     let pressColor;
 
-    if (props.state) {
+    if (!props.state) {
       pressColor = props.color;
       setOn(false);
     } else {

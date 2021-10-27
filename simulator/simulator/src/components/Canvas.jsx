@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useReducer } from "react";
+import React from "react";
 import { simulatorWidth } from "../utils/constants";
 import ItemMenu from "./ItemMenu";
 import Light from "./Light";
@@ -12,34 +12,10 @@ import logoLaica from "../images/logoLaica.png";
 import ControllerBar from "./ControllerBar";
 
 var inputsArray = [];
-function reducer(input, action) {
-  switch (action.type) {
-    case "CHANGE_STATE":
-      return action.data;
-    default:
-      throw new Error();
-  }
-}
 const Canvas = (props) => {
-  const programmer = { inputs: ["I0","I1","I2"], outputs: ["Q0.0", "Q0.1", "Q0.2","Q0.3"] };
+  const programmer = { inputs: ["I0.0", "I0.1"], outputs: ["Q0.0", "Q0.1"] };
   const simulatorHeight = 1200;
-  const [inputs, setInputs] = useState([]);
-  const [outputs, setOutputs] = useState({});
-
-  const initialState = { data: { address: "I0", state: false } };
-  const [input, dispatch] = useReducer(reducer, initialState);
-
-  const getOutputValues = (outputs) => {
-    setOutputs(outputs);
-  };
-  const changeInputs = (inp) => {
-    console.log(inp);
-    //inputsArray.push(inp);
-
-    //setInputs(inp, () => );
-    //console.log(inputs);
-    dispatch({ type: "CHANGE_STATE", data: inp });
-  };
+  const [inputs, setInputs] = React.useState([]);
 
   const viewBox = [
     window.innerWidth / -2,
@@ -50,10 +26,21 @@ const Canvas = (props) => {
 
   const style = {};
 
-  React.useEffect(() => {
-    console.log(input);
-    //setInputs(input);
-  }, [input]);
+  const getInputs = (inputs) => {
+    if (inputs != undefined) {
+      if (inputs.address != undefined) {
+        setInputs(inputs);
+        let addNewInput = true;
+        inputsArray.map((input, index) => {
+          if (input.address == inputs.address) {
+            inputsArray[index].state = inputs.state;
+            addNewInput = false;
+          }
+        });
+        if (addNewInput) inputsArray.push(inputs);
+      }
+    }
+  };
 
   return (
     <g>
@@ -119,11 +106,7 @@ const Canvas = (props) => {
                 size: "40",
               }}
             />
-            <InputBoard
-              programmer={programmer}
-              simulatorState={props.simulatorState}
-              changeInputs={changeInputs}
-            />
+            <InputBoard programmer={programmer} inputs={getInputs} />
             <svg x="-450" y="-900" width="500">
               <path
                 d="M0 200 L150 200 L150 10 L290 10 L290 150"
@@ -157,16 +140,8 @@ const Canvas = (props) => {
                 fill="transparent"
               ></path>
             </svg>
-            <PLC
-              simulatorState={props.simulatorState}
-              getInputsValues={input}
-              getOutputValues={getOutputValues}
-            />
-            <OutputBoard
-              simulatorState={props.simulatorState}
-              outputs={outputs}
-              programmer={programmer}
-            />
+            <PLC inputs={inputsArray}/>
+            <OutputBoard />
             <g onClick={() => props.returnToMenu()}>
               <svg x="900" y="-1050">
                 <path
@@ -185,12 +160,22 @@ const Canvas = (props) => {
                 }}
               />
             </g>
+            <ControllerBar></ControllerBar>
           </g>
         )}
         <img src={logoLaica} />
       </svg>
     </g>
   );
+};
+
+Canvas.propTypes = {
+  simulatorState: PropTypes.shape({
+    startedBasicSimulator: PropTypes.bool.isRequired,
+    startedProjectSimulator: PropTypes.bool.isRequired,
+  }).isRequired,
+  startBasicSimulator: PropTypes.func.isRequired,
+  returnToMenu: PropTypes.func.isRequired,
 };
 
 export default Canvas;

@@ -1,46 +1,9 @@
 import React from "react";
 import Title from "./Title";
-import PropTypes from "prop-types";
-import Snackbar from "@mui/material/Snackbar";
-import CloseIcon from "@mui/icons-material/Close";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Divider from "@mui/material/Divider";
-import { Typography } from "@material-ui/core";
-import Chip from "@mui/material/Chip";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import PlayCircle from "@mui/icons-material/PlayCircle";
-import StopCircle from "@mui/icons-material/StopCircle";
-import RestartCircle from "@mui/icons-material/RestartAltRounded";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 
-const ControllerBar = (props) => {
+const ControllerBar = () => {
   const startPointPanel = { x: -1150, y: -200 };
-  const [play, setPlay] = React.useState(false);
-  const [disabledPlay, setDisabledPlay] = React.useState(false);
-  const [colorPlay, setColorPlay] = React.useState("#568");
-  const [colorStop, setColorStop] = React.useState("#568");
-  const [colorRestart, setColorRestart] = React.useState("#568");
-  const [openMsg, setOpenMsg] = React.useState(false);
-
-  const [control, setControl] = React.useState("");
-
-  const handleControl = (event, newControl) => {
-    console.log(newControl);
-    if (newControl == "play") {
-      props.runSimulation();
-      setDisabledPlay(true);
-    }
-    if (newControl == "stop"){
-      props.stopSimulation();
-      setDisabledPlay(false);
-    } 
-  };
-
-  let rectStyle = {
+  const rectStyle = {
     x: startPointPanel.x,
     y: startPointPanel.y,
     width: 390,
@@ -52,103 +15,65 @@ const ControllerBar = (props) => {
     },
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenMsg(false);
-  };
-
-  const action = (
-    <React.Fragment>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
-  const handlePlay = () => {
-    if (play) {
-      setColorPlay("#568");
-      setPlay(false);
-      setOpenMsg(false);
-    } else {
-      setColorPlay("#7CFC00");
-      setPlay(true);
-      setOpenMsg(true);
-    }
-    props.play(play);
-  };
-
   return (
-    <div>
-      <Divider textAlign="left">
-        <Chip label="Painel de Controle"></Chip>
-      </Divider>
-      <div
-        className="controlPanel"
-        style={{
-          paddingLeft: "170px",
-          paddingRight: "170px",
-          marginTop: "30px",
-        }}
-      >
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={2}>
-            <Grid xs={4}>
-              <ToggleButtonGroup
-                size="large"
-                exclusive
-                aria-label="control"
-                onChange={handleControl}
-              >
-                <ToggleButton
-                  value="play"
-                  aria-label="left aligned"
-                  id="playButton"
-                  disabled={disabledPlay}
-                >
-                  <PlayCircle></PlayCircle>
-                  <Typography>Iniciar</Typography>
-                </ToggleButton>
-                <ToggleButton value="stop" aria-label="centered">
-                  <StopCircle></StopCircle>
-                  <Typography>Parar</Typography>
-                </ToggleButton>
-                <ToggleButton value="restart" aria-label="right aligned">
-                  <RestartCircle></RestartCircle>
-                  <Typography>Reiniciar</Typography>
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Grid>
-            <Grid xs={8}>
-              <TextField
-                id="outlined-multiline-static"
-                label="Log"
-                multiline
-                rows={4}
-                defaultValue="Não esqueça de pressionar o botão [Iniciar] para energizar o CLP..."
-                style={{ width: "100%" }}
-              />
-            </Grid>
-          </Grid>
-        </Box>
-      </div>
-    </div>
-  );
-};
+    <g>
+      <rect {...rectStyle}></rect>
 
-ControllerBar.propTypes = {
-  runSimulation: PropTypes.func.isRequired,
-  stopSimulation: PropTypes.func.isRequired,
+      <Title
+        position={{
+          x: -690,
+          y: 135,
+          text: "Painel de Controle",
+          size: "40",
+        }}
+      />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5"
+        viewBox="0 0 20 20"
+        fill="#568"
+        x="-1025"
+        y="-675"
+        width="15vmin"
+      >
+        <path
+          fillRule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
+          clipRule="evenodd"
+        />
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5"
+        viewBox="0 0 20 20"
+        fill="#568"
+        x="-1150"
+        y="-675"
+        width="15vmin"
+      >
+        <path
+          fillRule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+          clipRule="evenodd"
+        />
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5"
+        viewBox="0 0 20 20"
+        fill="#568"
+        x="-900"
+        y="-675"
+        width="15vmin"
+      >
+        <path
+          fillRule="evenodd"
+          d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </g>
+  );
 };
 
 export default ControllerBar;
