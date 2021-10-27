@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import {evaluate} from 'mathjs';
 
 import TrashDropZone from "./TrashDropZone";
 
@@ -15,6 +16,7 @@ import {
   getStorage,
   getLocalStorage,
   getAllLocalStorage,
+  parseJSON,
 } from "./helpers";
 
 import {
@@ -23,6 +25,7 @@ import {
   SIDEBAR_ITEM,
   COMPONENT,
   STANDARD_COMPONENT,
+  COLUMN,
 } from "./constants";
 import shortid from "shortid";
 
@@ -117,10 +120,10 @@ function Container() {
       const splitDropZonePath = dropZone.path.split("-");
 
       const pathToDropZone = splitDropZonePath.slice(0, -1).join("-");
-      console.log(splitDropZonePath);
+      console.log(item);
 
       const newItem = { id: shortid.generate(), type: item.type };
-      if (item.type === COMPONENT) {
+      if (item.type === COLUMN) {
         newItem.children = item.children;
       }
 
@@ -129,13 +132,19 @@ function Container() {
         // 1. Move sidebar item into page
         const newComponent = {
           id: shortid.generate(),
-          ...item.component,
+          component: {
+            ...item.component,
+          },
         };
+        console.log(newComponent);
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          row: splitDropZonePath[2],
-          column: splitDropZonePath[1],
+          component: {
+            row: splitDropZonePath[2],
+            column: splitDropZonePath[1],
+            color: "Black",
+          },
         };
         setComponents({
           ...components,
@@ -154,6 +163,7 @@ function Container() {
       // move down here since sidebar items dont have path
       const splitItemPath = item.path.split("-");
       const pathToItem = splitItemPath.slice(0, -1).join("-");
+      console.log(splitItemPath, pathToItem);
 
       // 2. Pure move (no create)
       if (splitItemPath.length === splitDropZonePath.length) {
@@ -172,7 +182,7 @@ function Container() {
             layout,
             splitDropZonePath,
             splitItemPath,
-            newItem
+            item
           )
         );
         return;
@@ -313,7 +323,7 @@ function Container() {
             )
               break;
             console.log(row, col);
-            expression = operation("*", addressOrdered[row][col], expression);
+            expression = operation(" and ", addressOrdered[row][col], expression);
 
             addressOrdered[row][col] = STANDARD_COMPONENT;
             const newPath = expression.args.path;
@@ -326,7 +336,7 @@ function Container() {
 
         expression = STANDARD_COMPONENT;
         componentsIntoLinePair.map((component, index) => {
-          expression = operation("+", component, expression);
+          expression = operation(" or ", component, expression);
           console.log(expression);
         });
         console.log(expression);
@@ -346,7 +356,7 @@ function Container() {
     addressOrdered[0].map((component, index) => {
       if (component.args.type != "coil") {
         console.log(component, expression);
-        expression = operation("*", component, expression);
+        expression = operation(" and ", component, expression);
       }
     });
     for (let index = 0; index < addressOrdered.length; index++) {
@@ -363,12 +373,12 @@ function Container() {
   const generateCode = useCallback(() => {
     let finalExpression = [];
     let layoutForSave = layout;
-    console.log(layout);
+    
 
     layout.map((row, rowIndex) => {
       let outs = [];
       var linePairs = checkParallelLines(rowIndex);
-      console.log(linePairs);
+      
       let obj = {};
       obj.row = rowIndex;
       var [expression, outputs] = getExpression(linePairs, rowIndex);
@@ -384,7 +394,13 @@ function Container() {
     });
     var json = createJSON(finalExpression);
     setJsonExpression(json);
-    console.log(layoutForSave);
+    let scope = {
+      A: 1,
+      B: 0, 
+      C: 1
+    }
+    console.log(String(parseJSON(json)[0].expression));
+    console.log(evaluate(String(parseJSON(json)[0].expression), scope));
     setLayout(layoutForSave);
     alert(json);
   });
@@ -413,14 +429,13 @@ function Container() {
     clearAllComponents();
     //const jsonFinal = JSON.parse(json);
     const loadLayout = JSON.parse(json);
-    
+
     setLoadLayout(loadLayout);
     //jsonFinal.map((row, index) => {
     //  console.log(row);
     //  generateLineFromExpression(row);
     //});
   };
-
 
   const addnewLine = useCallback(() => {
     var itens = [

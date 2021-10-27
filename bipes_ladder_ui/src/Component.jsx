@@ -56,7 +56,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
       addressFromComponent({
         address: address,
         path: path,
-        type: component.content,
+        type: component.component.content,
       });
     }
   }, [address]);
@@ -88,8 +88,8 @@ const Component = ({ data, components, path, addressFromComponent }) => {
       </div>
       <svg width="120px" height="70px">
         {console.log(component)}
-        <g fill="none" stroke={component.color}>
-          {component.svg.map(function (svg_element, index) {
+        <g fill="none" stroke={component.component.color}>
+          {component.component.svg.map(function (svg_element, index) {
             return <path stroke-width="3" d={svg_element} fill="none" />;
           })}
         </g>
