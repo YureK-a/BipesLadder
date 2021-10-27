@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import React, { useState, useCallback } from "react";
 import {evaluate} from 'mathjs';
+=======
+import React, { useState, useCallback, useEffect } from "react";
+>>>>>>> CounterTimerAndBugFix
 
+import DropZone from "./DropZone";
 import TrashDropZone from "./TrashDropZone";
 
 import SideBarItem from "./SideBarItem";
@@ -11,88 +16,53 @@ import {
   handleMoveToDifferentParent,
   handleMoveSidebarComponentIntoParent,
   handleRemoveItemFromLayout,
+  parseJSON,
   createJSON,
+<<<<<<< HEAD
   setStorage,
   getStorage,
   getLocalStorage,
   getAllLocalStorage,
   parseJSON,
+=======
+>>>>>>> CounterTimerAndBugFix
 } from "./helpers";
 
 import {
   SIDEBAR_ITEMS,
   SIDEBAR_ITEMS_OTHER,
   SIDEBAR_ITEM,
+  ITEMS_CHANGED,
   COMPONENT,
+  COLUMN,
+  ITEM_CHANGED,
   STANDARD_COMPONENT,
   COLUMN,
 } from "./constants";
 import shortid from "shortid";
 
+import ReactDOM from "react-dom";
+import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
+import EditIcon from "@material-ui/icons/Edit";
+import NavigationIcon from "@material-ui/icons/Navigation";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
+import { Component } from "react";
 import IconButton from "@material-ui/core/IconButton";
-import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
 
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
-import InboxIcon from "@material-ui/icons/Inbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
-
-import { parallelLines } from "./Column";
-
-import { Button, Modal, Box, Typography } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-
-const style_modal = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-  display: "grid",
-};
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
+import Column, { parallelLines } from "./Column";
 
 function Container() {
-  const [openSaveModel, setOpenSaveModel] = React.useState(false);
-  const handleOpenSaveModel = () => setOpenSaveModel(true);
-  const handleCloseSaveModel = () => setOpenSaveModel(false);
-
-  const [openLoadModel, setOpenLoadModel] = React.useState(false);
-  const handleOpenLoadModel = () => setOpenLoadModel(true);
-  const handleCloseLoadModel = () => setOpenLoadModel(false);
-
   const initialLayout = initialData.layout;
   const initialComponents = initialData.components;
   const [layout, setLayout] = useState(initialLayout);
   const [components, setComponents] = useState(initialComponents);
   const [address, setAddress] = useState([]);
-  const [storedFilesNumber, setStoreFiledNumber] = useState(0);
-  const [jsonExpression, setJsonExpression] = useState("{}");
-  const classes = useStyles();
+  var addressArray = [];
 
   const addressFromRow = (addresses) => {
     //addressArray.push(addresses[0]);
@@ -136,7 +106,11 @@ function Container() {
             ...item.component,
           },
         };
+<<<<<<< HEAD
         console.log(newComponent);
+=======
+     
+>>>>>>> CounterTimerAndBugFix
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
@@ -372,8 +346,11 @@ function Container() {
 
   const generateCode = useCallback(() => {
     let finalExpression = [];
+<<<<<<< HEAD
     let layoutForSave = layout;
     
+=======
+>>>>>>> CounterTimerAndBugFix
 
     layout.map((row, rowIndex) => {
       let outs = [];
@@ -385,13 +362,12 @@ function Container() {
       obj.expression = expression;
       outputs.map((output, index) => {
         outs.push(output.args.address);
-        let components = layoutForSave[rowIndex].children;
-        components[components.length - 1].id = "coilComponent";
       });
       obj.outputs = outs;
 
       finalExpression.push(obj);
     });
+<<<<<<< HEAD
     var json = createJSON(finalExpression);
     setJsonExpression(json);
     let scope = {
@@ -403,6 +379,9 @@ function Container() {
     console.log(evaluate(String(parseJSON(json)[0].expression), scope));
     setLayout(layoutForSave);
     alert(json);
+=======
+    alert(createJSON(finalExpression));
+>>>>>>> CounterTimerAndBugFix
   });
 
   const clearAllComponents = useCallback(() => {
@@ -410,6 +389,7 @@ function Container() {
     setLayout(layout);
   });
 
+<<<<<<< HEAD
   const setLoadLayout = useCallback((loadLayout) => {
     console.log(loadLayout);
     setLayout(loadLayout);
@@ -437,6 +417,8 @@ function Container() {
     //});
   };
 
+=======
+>>>>>>> CounterTimerAndBugFix
   const addnewLine = useCallback(() => {
     var itens = [
       components.lineComponent,
@@ -491,13 +473,8 @@ function Container() {
           </Fab>
 
           <Fab variant="extended" aria-label="add" style={{ margin: "2px" }}>
-            <IconButton color="primary" onClick={handleOpenSaveModel}>
+            <IconButton color="primary">
               <SaveAltIcon /> SALVAR
-            </IconButton>
-          </Fab>
-          <Fab variant="extended" aria-label="add" style={{ margin: "2px" }}>
-            <IconButton color="primary" onClick={handleOpenLoadModel}>
-              <OpenInBrowserIcon /> CARREGAR
             </IconButton>
           </Fab>
         </div>
@@ -560,57 +537,6 @@ function Container() {
           <div className="pageTest"></div>
         </div>
       </div>
-      <Modal
-        open={openSaveModel}
-        onClose={handleCloseSaveModel}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style_modal}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-          ></Typography>
-          <TextField
-            id="projectName"
-            label="Nome do Projeto"
-            variant="outlined"
-          />
-          <Button onClick={saveStoreFile}>Salvar</Button>
-        </Box>
-      </Modal>
-      <Modal
-        open={openLoadModel}
-        onClose={handleCloseLoadModel}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style_modal}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Projetos Salvos
-          </Typography>
-          <div className={classes.root}>
-            <Divider />
-            <List component="nav" aria-label="secondary mailbox folders">
-              {Object.values(localStorage).map((item, index) => {
-                return (
-                  <div>
-                    <ListItem button onClick={() => loadStoredFile(index)}>
-                      <ListItemIcon>
-                        <InboxIcon />
-                      </ListItemIcon>
-
-                      <ListItemText primary={item}></ListItemText>
-                    </ListItem>
-                  </div>
-                );
-              })}
-            </List>
-          </div>
-          <Divider />
-        </Box>
-      </Modal>
     </div>
   );
 }
