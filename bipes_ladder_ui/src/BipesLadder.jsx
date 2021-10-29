@@ -1,5 +1,4 @@
-import React, { useState, useCallback } from "react";
-import {evaluate} from 'mathjs';
+import React, { useState, useCallback, useEffect } from "react";
 
 import DropZone from "./DropZone";
 import TrashDropZone from "./TrashDropZone";
@@ -40,8 +39,9 @@ import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
 import { Component } from "react";
 import IconButton from "@material-ui/core/IconButton";
-
+import {BrowserRouter as Router, Route, Link} from "react-router-dom";
 import Column, { parallelLines } from "./Column";
+
 
 function Container() {
   const initialLayout = initialData.layout;
@@ -77,10 +77,10 @@ function Container() {
       const splitDropZonePath = dropZone.path.split("-");
 
       const pathToDropZone = splitDropZonePath.slice(0, -1).join("-");
-      console.log(item);
+      console.log(splitDropZonePath);
 
       const newItem = { id: shortid.generate(), type: item.type };
-      if (item.type === COLUMN) {
+      if (item.type === COMPONENT) {
         newItem.children = item.children;
       }
 
@@ -89,19 +89,14 @@ function Container() {
         // 1. Move sidebar item into page
         const newComponent = {
           id: shortid.generate(),
-          component: {
-            ...item.component,
-          },
+          ...item.component,
         };
-        console.log(newComponent);
+     
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: {
-            row: splitDropZonePath[2],
-            column: splitDropZonePath[1],
-            color: "Black",
-          },
+          row: splitDropZonePath[2],
+          column: splitDropZonePath[1],
         };
         setComponents({
           ...components,
@@ -120,7 +115,6 @@ function Container() {
       // move down here since sidebar items dont have path
       const splitItemPath = item.path.split("-");
       const pathToItem = splitItemPath.slice(0, -1).join("-");
-      console.log(splitItemPath, pathToItem);
 
       // 2. Pure move (no create)
       if (splitItemPath.length === splitDropZonePath.length) {
@@ -280,7 +274,7 @@ function Container() {
             )
               break;
             console.log(row, col);
-            expression = operation(" and ", addressOrdered[row][col], expression);
+            expression = operation("*", addressOrdered[row][col], expression);
 
             addressOrdered[row][col] = STANDARD_COMPONENT;
             const newPath = expression.args.path;
@@ -293,7 +287,7 @@ function Container() {
 
         expression = STANDARD_COMPONENT;
         componentsIntoLinePair.map((component, index) => {
-          expression = operation(" or ", component, expression);
+          expression = operation("+", component, expression);
           console.log(expression);
         });
         console.log(expression);
@@ -313,7 +307,7 @@ function Container() {
     addressOrdered[0].map((component, index) => {
       if (component.args.type != "coil") {
         console.log(component, expression);
-        expression = operation(" and ", component, expression);
+        expression = operation("*", component, expression);
       }
     });
     for (let index = 0; index < addressOrdered.length; index++) {
@@ -329,13 +323,11 @@ function Container() {
 
   const generateCode = useCallback(() => {
     let finalExpression = [];
-    let layoutForSave = layout;
-    
 
     layout.map((row, rowIndex) => {
       let outs = [];
       var linePairs = checkParallelLines(rowIndex);
-      
+      console.log(linePairs);
       let obj = {};
       obj.row = rowIndex;
       var [expression, outputs] = getExpression(linePairs, rowIndex);
@@ -347,8 +339,6 @@ function Container() {
 
       finalExpression.push(obj);
     });
-
-
     alert(createJSON(finalExpression));
   });
 
@@ -405,9 +395,12 @@ function Container() {
         <h2>BIPES LADDER</h2>
         <div class="menu">
           <Fab variant="extended" aria-label="add" style={{ margin: "2px" }}>
+            
             <IconButton color="primary" onClick={generateCode}>
-              <PlayCircleOutlineIcon /> EXECUTAR
+              <PlayCircleOutlineIcon /> SIMULAR
+              
             </IconButton>
+            
           </Fab>
 
           <Fab variant="extended" aria-label="add" style={{ margin: "2px" }}>
