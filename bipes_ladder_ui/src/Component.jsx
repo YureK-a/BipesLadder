@@ -34,11 +34,12 @@ const style_modal = {
 };
 
 const Component = ({ data, components, path, addressFromComponent }) => {
+  const component = components[data.id];
   const ref = useRef(null);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [address, setAddress] = React.useState("");
+  const [address, setAddress] = React.useState(component.properties.address);
 
   const [{ isDragging }, drag] = useDrag({
     item: { type: COMPONENT, id: data.id, path },
@@ -50,12 +51,23 @@ const Component = ({ data, components, path, addressFromComponent }) => {
   const opacity = isDragging ? 0 : 1;
   drag(ref);
 
-  const component = components[data.id];
-  
-
   const changeProperty = () => {
-    setAddress(document.getElementById("changeAddress").value);
-
+    let value = document.getElementById("changeAddress").value;
+    setAddress(value);
+    component.properties.address = value;
+    console.log(component.properties.address)
+    
+    if (components[data.id].content == "timer") {
+      component.properties.timerType = timerType;
+      component.properties.timerDuration = timerDuration;
+      component.properties.baseTime = baseTime;
+      component.svg.text = svgText
+    } else if (components[data.id].content == "counter") {
+      component.properties.counterType = counterType;
+      component.properties.preValue = preValue;
+      component.svg.text = svgText
+    }
+    
     setOpen(false);
   };
 
@@ -70,13 +82,20 @@ const Component = ({ data, components, path, addressFromComponent }) => {
     }
   }, [address]);
 
-  const [timerType, setTimerType] = React.useState("");
-  const [timerDuration, setTimerDuration] = React.useState("");
-  const [baseTime, setBaseTime] = React.useState("");
-  const [counterType, setCounterType] = React.useState("");
-  const [preValue, setpreValue] = React.useState("");
+  const [timerType, setTimerType] = React.useState(component.properties.timerType);
+  const [timerDuration, setTimerDuration] = React.useState(component.properties.timerDuration);
+  const [baseTime, setBaseTime] = React.useState(component.properties.baseTime);
+  const [redentiveTimer, setRedentiveTimer] = React.useState(component.properties.redentiveTimer)
+  const [counterType, setCounterType] = React.useState(component.properties.counterType);
+  const [preValue, setpreValue] = React.useState(component.properties.preValue);
   const [svgText, setSvgText] = React.useState(component.svg.text);
   const [svgIcon, setSvgIcon] = React.useState(component.svg.icon);
+
+
+  const onAddressChange = (e) => {
+    setAddress(e.target.value);
+    console.log(timerDuration);
+  };
 
   //Hooks do Timer
   const onTimerTypeChange = (e) => {
@@ -91,6 +110,10 @@ const Component = ({ data, components, path, addressFromComponent }) => {
   };
   const onBaseTimeChange = (e) => {
     setBaseTime(e.target.value);
+    console.log(baseTime);
+  };
+  const onRedentiveTimerChange = (e) => {
+    setRedentiveTimer(e.target.value);
     console.log(baseTime);
   };
 
@@ -118,7 +141,6 @@ const Component = ({ data, components, path, addressFromComponent }) => {
           labelId="label"
           id="timerType"
           value="20"
-          id="modal-modal-title"
           component="h2"
           class=".MuiTypography-h6"
           onChange={onTimerTypeChange}
@@ -150,7 +172,14 @@ const Component = ({ data, components, path, addressFromComponent }) => {
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Timer redentivo
         </Typography>
-        <Checkbox {...label} color="blue" labelPlacement="top" />
+        <Checkbox 
+          {...label} 
+          color="blue" 
+          labelPlacement="top" 
+          id="redentiveTimer"
+          onChange={onRedentiveTimerChange}
+          value={redentiveTimer}
+        />
       </div>
     );
   };
@@ -317,6 +346,8 @@ const Component = ({ data, components, path, addressFromComponent }) => {
               id="changeAddress"
               label="Novo Endereço"
               variant="outlined"
+              onChange={onAddressChange}
+              value={address}
             />
             {checkBox()}
             {newParameters}
