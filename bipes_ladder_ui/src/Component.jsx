@@ -53,27 +53,28 @@ const Component = ({ data, components, path, addressFromComponent }) => {
 
   const changeProperty = () => {
     let value = document.getElementById("changeAddress").value;
+    console.log(address);
     setAddress(value);
     component.properties.address = value;
-    console.log(component.properties.address)
-    
+    console.log(component.properties.address);
+
     if (components[data.id].content == "timer") {
       component.properties.timerType = timerType;
       component.properties.timerDuration = timerDuration;
       component.properties.baseTime = baseTime;
-      component.svg.text = svgText
+      component.svg.text = svgText;
     } else if (components[data.id].content == "counter") {
       component.properties.counterType = counterType;
       component.properties.preValue = preValue;
-      component.svg.text = svgText
+      component.svg.text = svgText;
     }
-    
+
     setOpen(false);
   };
 
   useEffect(() => {
     if (component.id !== "lineComponent" && address !== "") {
-    
+      console.log(address);
       addressFromComponent({
         address: address,
         path: path,
@@ -82,19 +83,26 @@ const Component = ({ data, components, path, addressFromComponent }) => {
     }
   }, [address]);
 
-  const [timerType, setTimerType] = React.useState(component.properties.timerType);
-  const [timerDuration, setTimerDuration] = React.useState(component.properties.timerDuration);
+  const [timerType, setTimerType] = React.useState(
+    component.properties.timerType
+  );
+  const [timerDuration, setTimerDuration] = React.useState(
+    component.properties.timerDuration
+  );
   const [baseTime, setBaseTime] = React.useState(component.properties.baseTime);
-  const [redentiveTimer, setRedentiveTimer] = React.useState(component.properties.redentiveTimer)
-  const [counterType, setCounterType] = React.useState(component.properties.counterType);
+  const [redentiveTimer, setRedentiveTimer] = React.useState(
+    component.properties.redentiveTimer
+  );
+  const [counterType, setCounterType] = React.useState(
+    component.properties.counterType
+  );
   const [preValue, setpreValue] = React.useState(component.properties.preValue);
   const [svgText, setSvgText] = React.useState(component.svg.text);
   const [svgIcon, setSvgIcon] = React.useState(component.svg.icon);
 
-
   const onAddressChange = (e) => {
-    setAddress(e.target.value);
-    console.log(timerDuration);
+    //setAddress(e.target.value);
+    console.log(e.target.value);
   };
 
   //Hooks do Timer
@@ -172,10 +180,10 @@ const Component = ({ data, components, path, addressFromComponent }) => {
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Timer redentivo
         </Typography>
-        <Checkbox 
-          {...label} 
-          color="blue" 
-          labelPlacement="top" 
+        <Checkbox
+          {...label}
+          color="blue"
+          labelPlacement="top"
           id="redentiveTimer"
           onChange={onRedentiveTimerChange}
           value={redentiveTimer}
@@ -347,7 +355,6 @@ const Component = ({ data, components, path, addressFromComponent }) => {
               label="Novo Endereço"
               variant="outlined"
               onChange={onAddressChange}
-              value={address}
             />
             {checkBox()}
             {newParameters}
@@ -356,7 +363,6 @@ const Component = ({ data, components, path, addressFromComponent }) => {
         </Modal>
       </div>
       <svg width="120px" height="70px">
-        
         <g fill="none" stroke={component.color}>
           {component.svg.path.map(function (svg_element, index) {
             return <path stroke-width="3" d={svg_element} fill="none" />;
