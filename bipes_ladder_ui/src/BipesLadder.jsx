@@ -309,6 +309,7 @@ function Container() {
     console.info(newAddress);
     let line = [];
     address.map((component, index) => {
+      console.log(component);
       if (component.args != "" && component.row == row) {
         const row = splitPath(component.args.path).row;
         const col = splitPath(component.args.path).column;
@@ -348,7 +349,7 @@ function Container() {
               break;
             console.log(row, col);
             expression = operation(
-              " AND ",
+              " and ",
               addressOrdered[row][col],
               expression
             );
@@ -363,7 +364,7 @@ function Container() {
 
         expression = STANDARD_COMPONENT;
         componentsIntoLinePair.map((component, index) => {
-          expression = operation(" OR ", component, expression);
+          expression = operation(" or ", component, expression);
         });
 
         const newPath = expression.args.path;
@@ -380,7 +381,7 @@ function Container() {
     expression = STANDARD_COMPONENT;
     addressOrdered[0].map((component, index) => {
       if (component.args.type != "coil") {
-        expression = operation("AND", component, expression);
+        expression = operation(" and ", component, expression);
       }
     });
     for (let index = 0; index < addressOrdered.length; index++) {
