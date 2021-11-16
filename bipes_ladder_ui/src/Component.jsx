@@ -13,6 +13,7 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import { AddAlarmOutlinedIcon } from "@material-ui/icons";
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const style = {
   //border: "1px dashed black",
@@ -32,6 +33,27 @@ const style_modal = {
   p: 4,
   display: "grid",
 };
+
+const style_svg = {
+  position:"absolute", 
+  bottom:"0px",
+  zIndex:"-1",
+  bottom:"-15px", 
+  left:"0px"
+};
+
+const theme = createTheme(
+  {
+    palette: {
+      primary: {
+        main: '#90ed8e',
+      },
+      secondary: {
+        main: '#558b2f',
+      },
+    },
+  }
+);
 
 const Component = ({ data, components, path, addressFromComponent }) => {
   const component = components[data.id];
@@ -71,6 +93,19 @@ const Component = ({ data, components, path, addressFromComponent }) => {
 
     setOpen(false);
   };
+
+  const checkButton = () => {
+    if (components[data.id].content != "line") {
+
+      return (
+        <ThemeProvider theme={theme}>
+          <Button id="btAddress" variant="contained" color="primary" size="small" onClick={handleOpen}>
+            {address}
+          </Button>
+        </ThemeProvider>
+      )
+    }
+  }
 
   useEffect(() => {
     if (component.id !== "lineComponent" && address !== "") {
@@ -336,10 +371,8 @@ const Component = ({ data, components, path, addressFromComponent }) => {
 
   return (
     <div ref={ref} style={{ ...style, opacity }}>
-      <div>
-        <Button id="btAddress" onClick={handleOpen}>
-          {address}
-        </Button>
+      <div style={{height:"34px"}}>
+        {checkButton()}
         <Modal
           open={open}
           onClose={handleClose}
