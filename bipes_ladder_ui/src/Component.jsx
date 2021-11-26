@@ -13,7 +13,7 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import { AddAlarmOutlinedIcon } from "@material-ui/icons";
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 const style = {
   //border: "1px dashed black",
@@ -35,25 +35,23 @@ const style_modal = {
 };
 
 const style_svg = {
-  position:"absolute", 
-  bottom:"0px",
-  zIndex:"-1",
-  bottom:"-15px", 
-  left:"0px"
+  position: "absolute",
+  bottom: "0px",
+  zIndex: "-1",
+  bottom: "-15px",
+  left: "0px",
 };
 
-const theme = createTheme(
-  {
-    palette: {
-      primary: {
-        main: '#90ed8e',
-      },
-      secondary: {
-        main: '#558b2f',
-      },
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#90ed8e",
     },
-  }
-);
+    secondary: {
+      main: "#558b2f",
+    },
+  },
+});
 
 const Component = ({ data, components, path, addressFromComponent }) => {
   const component = components[data.id];
@@ -75,11 +73,10 @@ const Component = ({ data, components, path, addressFromComponent }) => {
 
   const changeProperty = () => {
     let value = document.getElementById("changeAddress").value;
-    console.log(address);
+
     setAddress(value);
     component.properties.address = value;
-    console.log(component.properties.address);
-
+    console.log("Change Property - ", component );
     if (components[data.id].content == "timer") {
       component.properties.timerType = timerType;
       component.properties.timerDuration = timerDuration;
@@ -96,25 +93,56 @@ const Component = ({ data, components, path, addressFromComponent }) => {
 
   const checkButton = () => {
     if (components[data.id].content != "line") {
-
       return (
         <ThemeProvider theme={theme}>
-          <Button id="btAddress" variant="contained" color="primary" size="small" onClick={handleOpen}>
+          <Button
+            id="btAddress"
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={handleOpen}
+          >
             {address}
           </Button>
         </ThemeProvider>
-      )
+      );
     }
-  }
+  };
 
   useEffect(() => {
     if (component.id !== "lineComponent" && address !== "") {
-      console.log(address);
-      addressFromComponent({
-        address: address,
-        path: path,
-        type: component.content,
-      });
+      if (components[data.id].content == "timer") {
+        addressFromComponent({
+          id: data.id,
+          address: address,
+          path: path,
+          type: component.content,
+          properties: {
+            timerType: component.properties.timerType,
+            timerDuration: component.properties.timerDuration,
+          },
+        });
+      } else {
+        if (components[data.id].content == "counter") {
+          addressFromComponent({
+            id: data.id,
+            address: address,
+            path: path,
+            type: component.content,
+            properties: {
+              counterType: component.properties.counterType,
+              setPoint: component.properties.preValue,
+            },
+          });
+        } else {
+          addressFromComponent({
+            id: data.id,
+            address: address,
+            path: path,
+            type: component.content,
+          });
+        }
+      }
     }
   }, [address]);
 
@@ -137,39 +165,32 @@ const Component = ({ data, components, path, addressFromComponent }) => {
 
   const onAddressChange = (e) => {
     //setAddress(e.target.value);
-    console.log(e.target.value);
   };
 
   //Hooks do Timer
   const onTimerTypeChange = (e) => {
     setTimerType(e.target.value);
-    console.log(timerType);
+
     setSvgText(e.target.value);
-    console.log(`O SVGTEXT é ${svgText}`);
   };
   const onTimerDurantionChange = (e) => {
     setTimerDuration(e.target.value);
-    console.log(timerDuration);
   };
   const onBaseTimeChange = (e) => {
     setBaseTime(e.target.value);
-    console.log(baseTime);
   };
   const onRedentiveTimerChange = (e) => {
     setRedentiveTimer(e.target.value);
-    console.log(baseTime);
   };
 
   //Hooks do contador
   const onCounterTypeChange = (e) => {
     setCounterType(e.target.value);
-    console.log(counterType);
+
     setSvgText(e.target.value);
-    console.log(`O SVGTEXT é ${svgText}`);
   };
   const onPreValueChange = (e) => {
     setpreValue(e.target.value);
-    console.log(preValue);
   };
 
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -178,7 +199,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
     return (
       <div>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Tipo de timer
+          Tipo do Temporizador
         </Typography>
         <Select
           labelId="label"
@@ -193,7 +214,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
           <MenuItem value="TOF">TOF</MenuItem>
         </Select>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Duração do Timer
+          Duração
         </Typography>
         <TextField
           id="timerDuration"
@@ -213,7 +234,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
           value={baseTime}
         />
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Timer redentivo
+          Temporizador Retentivo
         </Typography>
         <Checkbox
           {...label}
@@ -230,7 +251,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
     return (
       <div>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Tipo de counter
+          Tipo do Contador
         </Typography>
         <Select
           labelId="label"
@@ -371,7 +392,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
 
   return (
     <div ref={ref} style={{ ...style, opacity }}>
-      <div style={{height:"34px"}}>
+      <div style={{ height: "34px" }}>
         {checkButton()}
         <Modal
           open={open}

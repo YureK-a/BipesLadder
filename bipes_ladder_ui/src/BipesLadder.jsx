@@ -25,6 +25,7 @@ import {
   STANDARD_COMPONENT,
 } from "./constants";
 import shortid from "shortid";
+import { nanoid } from "nanoid";
 
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
@@ -48,6 +49,7 @@ import DraftsIcon from "@material-ui/icons/Drafts";
 import { Button, Modal, Box, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { Code } from "@material-ui/icons";
+import { Component } from "react";
 
 const style_modal = {
   position: "absolute",
@@ -86,6 +88,8 @@ function Container() {
   const initialComponents = initialData.components;
   const [layout, setLayout] = useState(initialLayout);
   const [components, setComponents] = useState(initialComponents);
+  const [timerParameters, setTimerParameters] = useState({});
+  const [counterParameters, setCounterParameters] = useState({});
   const [address, setAddress] = useState([]);
   const [jsonExpression, setJsonExpression] = useState("{}");
   const classes = useStyles();
@@ -100,20 +104,54 @@ function Container() {
   const addressFromRow = (addresses) => {
     //addressArray.push(addresses[0]);
     setAddress(addresses);
-    console.log(address);
   };
 
   const handleDropToTrashBin = useCallback(
     (dropZone, item) => {
-      console.log(item.path);
+      console.log("BippesLadder - Item", item, address);
+      let components_copy = components;
       const splitItemPath = item.path.split("-");
       setLayout(handleRemoveItemFromLayout(layout, splitItemPath));
-      address.map((row, index) => {
-        console.log(row);
-        if (row.args.path == item.path) {
-          address.splice(index);
+      const components_ = Object.keys(components_copy);
+      let address_ = address;
+      for (let index = 0; index < components_.length; index++) {
+        if (
+          !components_.includes(
+            "openedContactComponent",
+            "coilComponent",
+            "closedContactComponent",
+            "timerComponent",
+            "counterComponent"
+          )
+        ) {
+          const component = components[components_[index]];
+
+          if (component.id == item.id && component.type != "") {
+            for (let index = 0; index < inputs_.length; index++) {
+              const input = inputs_[index];
+
+              if (input == component.properties.address) {
+                inputs_.splice(index, 1);
+                break;
+              }
+            }
+            
+
+            address_.map((address, index) => {
+              if (address.args.path == item.path) {
+                delete address_[index];
+              }
+            });
+
+            delete components_copy[component.id];
+            console.log("Components_Copy", components_copy);
+            break;
+          }
         }
-      });
+      }
+
+      setAddress(address_);
+      setComponents(components_copy);
     },
     [layout]
   );
@@ -123,20 +161,24 @@ function Container() {
       const splitDropZonePath = dropZone.path.split("-");
 
       const pathToDropZone = splitDropZonePath.slice(0, -1).join("-");
-      console.log(splitDropZonePath);
 
-      const newItem = { id: shortid.generate(), type: item.type };
+      const newItem = { id: nanoid(), type: item.type };
       if (item.type === COMPONENT) {
         newItem.children = item.children;
       }
 
       // sidebar into
       if (item.type === SIDEBAR_ITEM) {
+        console.log("Bippes Ladder - New Item Component", item);
         // 1. Move sidebar item into page
+        let newId = nanoid();
+        item.component.id = newId;
         const newComponent = {
-          id: shortid.generate(),
+          id: newId,
           ...item.component,
         };
+
+        console.log("Bippes Ladder - New Component", newComponent);
 
         const newItem = {
           id: newComponent.id,
@@ -144,10 +186,14 @@ function Container() {
           row: splitDropZonePath[2],
           column: splitDropZonePath[1],
         };
+
+        console.log("Bippes Ladder - New Item", newItem);
+
         setComponents({
           ...components,
           [newComponent.id]: newComponent,
         });
+
         setLayout(
           handleMoveSidebarComponentIntoParent(
             layout,
@@ -215,7 +261,7 @@ function Container() {
     const linePairs = [];
     var initialLine = 0;
     var parallelLinesOrdered = [];
-    console.log(parallelLines);
+
     parallelLines[row].map((path, index) => {
       if (path != "") {
         const splitItemPath = path.split("-");
@@ -224,7 +270,6 @@ function Container() {
         parallelLinesOrdered.sort(function (a, b) {
           return a - b;
         });
-        console.log(parallelLinesOrdered);
       }
     });
 
@@ -253,24 +298,6 @@ function Container() {
   }
 
   function operation(op, firstComponent, secondComponent) {
-    if(op == "not"){
-      const row = firstComponent.row;
-      const address = 
-      "NOT (" + firstComponent.args.address + ")";
-      const path = firstComponent.args.path;
-      const type = op + "_operation"
-
-      const newComponent = {
-        row: row,
-        args: {
-          address: address,
-          path: path,
-          type: type,
-        },
-      };
-
-      return newComponent;
-    }
     if (firstComponent.row == -1) return secondComponent;
     if (secondComponent.row == -1) return firstComponent;
     const row = firstComponent.row;
@@ -309,12 +336,21 @@ function Container() {
     console.info(newAddress);
     let line = [];
     address.map((component, index) => {
-      console.log(component);
       if (component.args != "" && component.row == row) {
         const row = splitPath(component.args.path).row;
         const col = splitPath(component.args.path).column;
+
+        if (component.args.type == "closed_contact") {
+          if (component.args.address[0] == "n") {
+            component.args.address = component.args.address;
+          } else {
+            component.args.address = "not (" + component.args.address + ")";
+          }
+        }
+
         newAddress[row][col] = component;
-        if (component.args.type != "coil") inputs_.push(component.args.address);
+        if (component.args.type != "coil" && component.args.type != "timer")
+          inputs_.push(component.args.address);
       }
     });
 
@@ -329,14 +365,44 @@ function Container() {
     return array;
   };
 
+  function checkInstructionParameters() {
+    console.log("BippesLadder - Address", address);
+    const components_ = address;
+    let instructions = {};
+    
+    let instructionsCounter_ = [];
+    let instructionsTimer_ = [];
+    for (let index = 0; index < components_.length; index++) {
+      const component = components_[index];
+      let instructionsCounter = {};
+      let instructionsTimer = {};
+      if (component.args.type == "timer") {
+        instructionsTimer.address = component.args.address;
+        instructionsTimer.timerType = component.args.properties.timerType;
+        instructionsTimer.timerDuration = component.args.properties.timerDuration;
+        instructionsTimer_.push(instructionsTimer);
+      } else {
+        if (component.args.type == "counter") {
+          instructionsCounter.address = component.args.address;
+          instructionsCounter.counterType = component.args.properties.counterType;
+          instructionsCounter.preValue = component.args.properties.preValue;
+          instructionsCounter_.push(instructionsCounter);
+        }
+      }
+    }
+    instructions["counters"] = instructionsCounter_;
+    instructions["timers"] = instructionsTimer_;
+    return instructions;
+  }
+
   function getExpression(linePairs, row) {
     let addressOrdered = sortAddressByPath(address, row);
     console.log(addressOrdered);
+
     let expression = STANDARD_COMPONENT;
     let componentsIntoLinePair = [];
 
     if (linePairs.length > 0) {
-      console.log("Parallel Lines", linePairs, row);
       linePairs.map((pair, index) => {
         componentsIntoLinePair = [];
         for (let row = 0; row < 2; row++) {
@@ -344,10 +410,11 @@ function Container() {
           for (let col = pair[0]; col < pair[1]; col++) {
             if (
               addressOrdered[row][col].row == -1 ||
-              addressOrdered[row][col].args.type == "coil"
+              addressOrdered[row][col].args.type == "coil" ||
+              addressOrdered[row][col].args.type == "timer"
             )
               break;
-            console.log(row, col);
+
             expression = operation(
               " and ",
               addressOrdered[row][col],
@@ -380,7 +447,8 @@ function Container() {
     let output = [];
     expression = STANDARD_COMPONENT;
     addressOrdered[0].map((component, index) => {
-      if (component.args.type != "coil") {
+      if (component.args.type != "coil" && component.args.type != "timer") {
+        console.log(component);
         expression = operation(" and ", component, expression);
       }
     });
@@ -391,9 +459,17 @@ function Container() {
         output.push(comp);
       }
     }
-    console.log(inputs_);
-    inputs_ = remove(inputs_, "");
+
+    //checkInstructionParameters(inputs_);
+    for (let index = 0; index < inputs_.length; index++) {
+      const input_ = inputs_[index];
+      //if (input_[0] == "T") {
+      //inputs_ = remove(inputs_, input_);
+      //}
+    }
+    //
     finalExpression.inputs = inputs_;
+
     setInputs(inputs_);
 
     return [expression.args.address, output];
@@ -403,11 +479,12 @@ function Container() {
     let layoutForSave = layout;
     layoutForSaveCopy = layoutForSave;
     finalExpression["row"] = [];
+    finalExpression["outputs"] = [];
 
     layout.map((row, rowIndex) => {
       let outs = [];
       var linePairs = checkParallelLines(rowIndex);
-      console.log(linePairs);
+
       let obj = {};
       obj.row = rowIndex;
       var [expression, outputs] = getExpression(linePairs, rowIndex);
@@ -418,9 +495,16 @@ function Container() {
         components[components.length - 1].id = "coilComponent";
       });
       obj.outputs = outs;
-      finalExpression.outputs = outs;
+      for (let index = 0; index < outs.length; index++) {
+        const out = outs[index];
+        if (out[0] == "Q") finalExpression["outputs"].push(out);
+      }
+
       finalExpression["row"].push(obj);
     });
+
+    const instructionParameters = checkInstructionParameters(address);
+    finalExpression["instructions_parameters"] = instructionParameters;
     var json = createJSON(finalExpression);
     setJsonExpression(json);
     setLayout(layout);
@@ -434,7 +518,6 @@ function Container() {
   });
 
   const setLoadLayout = useCallback((loadLayout) => {
-    console.log(loadLayout);
     setLayout(loadLayout);
     handleCloseLoadModel();
   });
@@ -454,10 +537,6 @@ function Container() {
     const loadLayout = JSON.parse(json);
 
     setLoadLayout(loadLayout);
-    //jsonFinal.map((row, index) => {
-    //  console.log(row);
-    //  generateLineFromExpression(row);
-    //});
   };
   const addnewLine = useCallback(() => {
     var itens = [
@@ -473,13 +552,13 @@ function Container() {
       components.lineComponent,
       components.lineComponent,
       components.lineComponent,
-      components.openedContactComponent,
+      initialData.components.openedContactComponent,
     ];
 
     let newLayout = handleMoveSidebarComponentIntoParent(
       layout,
       [layout.length],
-      components.coilComponent
+      initialData.components.coilComponent
     );
     setLayout(newLayout);
 
@@ -493,6 +572,14 @@ function Container() {
       newLayout = nextComponentLayout;
     });
   });
+
+  useEffect(() => {
+    console.log("BippesLadder - components", components);
+  }, [components]);
+
+  useEffect(() => {
+    console.log("BippesLadder - address", address);
+  }, [address]);
 
   function downloadFile(code) {
     let element = document.createElement("a");
@@ -543,7 +630,7 @@ function Container() {
           {Object.values(SIDEBAR_ITEMS_OTHER).map((sideBarItem, index) => (
             <SideBarItem key={sideBarItem.id} data={sideBarItem} />
           ))}
-          <div style={{ marginTop: "50px", textAlign:"center" }}>
+          <div style={{ marginTop: "50px", textAlign: "center" }}>
             <img src="./images/if_logo.png" width="70"></img>
             <img src="./images/logoLaica.png" width="70"></img>
           </div>
