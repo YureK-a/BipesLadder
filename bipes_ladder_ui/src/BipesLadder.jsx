@@ -671,14 +671,14 @@ function Container() {
                 </React.Fragment>
               );
             })}
-            <TrashDropZone
+            
+          </div>
+          <TrashDropZone
               data={{
                 layout,
               }}
               onDrop={handleDropToTrashBin}
             />
-          </div>
-
           <div className="pageTest"></div>
         </div>
       </div>
