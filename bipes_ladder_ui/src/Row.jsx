@@ -27,17 +27,20 @@ const Row = ({ data, components, handleDrop, path, addressFromRow }) => {
 
   useEffect(() => {
     //addressArray.push([path, address]);
-    console.log(address);
+    console.log(addressArray);
     let addressArray_ = addressArray;
     let addNewAddress = true;
+    
     for (let index = 0; index < addressArray_.length; index++) {
       const address_ = addressArray_[index];
-      if (address_.args.address == address.address) {
+      
+      if (address_.args.address == address.address && address_.args.type == address.type) {
         addNewAddress = false;
         break;
       }
     }
-    if (addressArray.length == 0 || addNewAddress){
+    if (addNewAddress && address != "" && address.address != ""){
+      console.log(address);
       addressArray.push({ row: path, args: address });
     }
       

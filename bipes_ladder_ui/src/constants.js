@@ -1,4 +1,5 @@
 import shortid from "shortid";
+import {nanoid} from "nanoid";
 import React from "react";
 
 export const SIDEBAR_ITEM = "sidebarItem";
@@ -11,10 +12,9 @@ export const STANDARD_COMPONENT = { row: -1, args: { address: "", path: "", type
 
 
 export const SIDEBAR_ITEMS = [{
-        id: shortid.generate(),
+        id: nanoid(),
         type: SIDEBAR_ITEM,
         component: {
-            id: shortid.generate(),
             type: "contact",
             content: "opened_contact",
             svg: {  id: "opened_contact", 
@@ -29,10 +29,9 @@ export const SIDEBAR_ITEMS = [{
         }
     },
     {
-        id: shortid.generate(),
+        id: nanoid(),
         type: SIDEBAR_ITEM,
         component: {
-            id: shortid.generate(),
             type: "contact",
             content: "closed_contact",
             svg: {  id: "closed_contact", 
@@ -47,11 +46,10 @@ export const SIDEBAR_ITEMS = [{
         }
     },
     {
-        id: shortid.generate(),
+        id: nanoid(),
         type: SIDEBAR_ITEM,
         component: {
-            id: shortid.generate(),
-            type: "output",
+            type: "instruction",
             content: "timer",
             svg: {  id: "timer", 
                     style: "", 
@@ -74,11 +72,10 @@ export const SIDEBAR_ITEMS = [{
         }
     },
     {
-        id: shortid.generate(),
+        id: nanoid(),
         type: SIDEBAR_ITEM,
         component: {
-            id: shortid.generate(),
-            type: "output",
+            type: "instruction",
             content: "counter",
             svg: {  id:"", 
                     style:"", 
@@ -100,10 +97,10 @@ export const SIDEBAR_ITEMS = [{
         }
     },
     {
-        id: shortid.generate(),
+        id: nanoid(),
         type: SIDEBAR_ITEM,
         component: {
-            id: shortid.generate(),
+            
             type: "output",
             content: "coil",
             svg: {  id:"", 
@@ -124,12 +121,12 @@ export const SIDEBAR_ITEMS_OTHER = [{
     id: shortid.generate(),
     type: SIDEBAR_ITEM,
     component: {
-        id: shortid.generate(),
+        
         type: "",
         content: "line",
         svg: {  id:"", 
                 style:"", 
-                path:['M0 48 L120 48']},
+                path:['M0 30 L120 30']},
         color: "red",
         properties: {
             address: ""

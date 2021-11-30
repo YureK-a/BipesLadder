@@ -246,7 +246,7 @@ export const generateLayoutFromJSON = (json) => {
 export const setStorage = (json, itemName) => {
     if (typeof(Storage) !== "undefined") {
         localStorage.setItem(itemName, json);
-        console.log(localStorage);
+
     }
 }
 
