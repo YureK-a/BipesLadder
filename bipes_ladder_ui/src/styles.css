@@ -34,12 +34,25 @@ body {
     text-align: right;
     margin-top: 10px;
     margin-bottom: 10px;
+
 }
 
 .head_top h2 {
     color: #FFF;
     margin-top: center/2;
     margin-left: 10px;
+}
+
+.menu-buttons{
+    position: sticky;
+    top: 0;
+    display: flex;
+    text-align: right;
+}
+
+.menu-buttons-content{
+    align-self: flex-end;
+    flex: 1;
 }
 
 .sideBar {

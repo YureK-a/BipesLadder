@@ -64,6 +64,19 @@ const style_modal = {
   display: "grid",
 };
 
+const style_box = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  display: "grid",
+};
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -512,8 +525,13 @@ function Container() {
     downloadFile(json);
   });
 
+  const [openClearAllComponents, setOpenClearAllComponents] = React.useState(false);
+  const handleOpen = () => setOpenClearAllComponents(true);
+  const handleClose = () => setOpenClearAllComponents(false);
+
   const clearAllComponents = useCallback(() => {
     const layout = [];
+    handleClose()
     setLayout(layout);
   });
 
@@ -594,6 +612,8 @@ function Container() {
     document.body.removeChild(element);
   }
 
+  
+
   return (
     <div className="body">
       <div class="head_top">
@@ -637,17 +657,35 @@ function Container() {
         </div>
         <div className="pageContainer">
           <div className="page">
-            <div class="menu">
-              <Fab aria-label="add" style={{ margin: "2px" }}>
-                <IconButton color="secondary" onClick={addnewLine}>
-                  <AddIcon />
-                </IconButton>
-              </Fab>
-              <Fab aria-label="clear" style={{ margin: "2px" }}>
-                <IconButton color="secondary" onClick={clearAllComponents}>
-                  <ClearAllIcon />
-                </IconButton>
-              </Fab>
+            <div class="menu-buttons">
+              <div class="menu-buttons-content">
+                <Fab aria-label="add" style={{ margin: "2px"}}>
+                  <IconButton color="secondary" onClick={addnewLine}>
+                    <AddIcon />
+                  </IconButton>
+                </Fab>
+                <Fab aria-label="clear" style={{ margin: "2px" }}>
+                  <IconButton color="secondary" onClick={handleOpen}>
+                    <ClearAllIcon />
+                  </IconButton>
+                </Fab>
+                
+                <Modal
+                  class="style_box"
+                  open={openClearAllComponents}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style_box}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                      Apagar todos os componentes?
+                    </Typography>
+                    <Button onClick={clearAllComponents} >Sim</Button>
+                    <Button onClick={handleClose}>Não</Button>
+                  </Box>
+                </Modal>
+              </div>
             </div>
 
             {layout.map((row, index) => {

@@ -60,6 +60,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [address, setAddress] = React.useState(component.properties.address);
+  const [preAddress, setPreAddress] = React.useState(component.properties.address)
 
   const [{ isDragging }, drag] = useDrag({
     item: { type: COMPONENT, id: data.id, path },
@@ -72,21 +73,28 @@ const Component = ({ data, components, path, addressFromComponent }) => {
   drag(ref);
 
   const changeProperty = () => {
-    let value = document.getElementById("changeAddress").value;
+    
 
-    setAddress(value);
-    component.properties.address = value;
     console.log("Change Property - ", component );
-    if (components[data.id].content == "timer") {
+    if (components[data.id].content == "opened_contact" || components[data.id].content == "closed_contact") {
+      setAddress(`I.` + preAddress)
+    } else if (components[data.id].content == "coil") {
+      setAddress(`Q.` + preAddress)
+    } else if (components[data.id].content == "timer") {
       component.properties.timerType = timerType;
       component.properties.timerDuration = timerDuration;
       component.properties.baseTime = baseTime;
       component.svg.text = svgText;
+      setAddress(`T.` + preAddress)
     } else if (components[data.id].content == "counter") {
       component.properties.counterType = counterType;
       component.properties.preValue = preValue;
       component.svg.text = svgText;
+      setAddress(`C.` + preAddress)
     }
+
+    let value = address;
+    component.properties.address = address;
 
     setOpen(false);
   };
@@ -164,7 +172,7 @@ const Component = ({ data, components, path, addressFromComponent }) => {
   const [svgIcon, setSvgIcon] = React.useState(component.svg.icon);
 
   const onAddressChange = (e) => {
-    //setAddress(e.target.value);
+    setPreAddress(e.target.value);
   };
 
   //Hooks do Timer
