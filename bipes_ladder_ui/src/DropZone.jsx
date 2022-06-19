@@ -5,7 +5,7 @@ import { COMPONENT, SIDEBAR_ITEM, ROW, COLUMN } from "./constants";
 
 const ACCEPTS = [SIDEBAR_ITEM, ROW, COLUMN, COMPONENT];
 
-const style = {height:"18px"};
+const style = { height: "18px", width: "120px" };
 
 const DropZone = ({ data, onDrop, isLast, className }) => {
   const [{ isOver, canDrop }, drop] = useDrop({
@@ -96,10 +96,9 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
           <path stroke-width="3" d={svg_line} fill="none" />
         </g>
       </svg>
-   
       
     </div>
-    
   );
 };
+
 export default DropZone;
