@@ -1,9 +1,8 @@
 import React, { useRef } from "react";
 import { useDrag } from "react-dnd";
 import { COLUMN } from "./constants";
-import DropZone from "./DropZone";
 import Component from "./Component";
-import ParallelLines from "./ParallelLines"
+import DropZone from "./DropZone"
 
 const style = {};
 
@@ -38,10 +37,12 @@ const Column = ({
     return (
       <Component
         key={component.id}
-        data={component}
+        data={data}
+        componentData={component}
         components={components}
         path={currentPath}
         addressFromComponent={addressFromComponent}
+        handleDrop={handleDrop}
       />
     );
   };
@@ -54,38 +55,22 @@ const Column = ({
     >
       {data.children.map((component, index) => {
         const currentPath = `${path}-${index}`;
-
         return (
           <React.Fragment key={component.id}>
             <DropZone
               data={{
-                path: currentPath,
+                path: `${path}-${data.children.length}`,
                 childrenCount: data.children.length,
                 drawLine: false,
               }}
               onDrop={handleDrop}
+              isLast
             />
 
             {renderComponent(component, currentPath)}
           </React.Fragment>
         );
       })}
-      
-      <DropZone
-        data={{
-          path: `${path}-${data.children.length}`,
-          childrenCount: data.children.length,
-          drawLine: false,
-        }}
-        onDrop={handleDrop}
-        isLast
-      />
-
-      <ParallelLines
-        path={path}
-        rowPath={rowPath}
-      />
-
     </div>
   );
 };
