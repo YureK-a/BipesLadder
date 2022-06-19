@@ -1,12 +1,13 @@
 import React, { useRef } from "react";
 import { useDrag } from "react-dnd";
 import { COLUMN } from "./constants";
-import DropZone from "./DropZone";
 import Component from "./Component";
+import DropZone from "./DropZone"
 
 const style = {};
+
 let rowPath;
-const parallelLines = new Array(5).fill("").map(() => new Array(13).fill(""));
+
 const Column = ({
   data,
   components,
@@ -36,39 +37,15 @@ const Column = ({
     return (
       <Component
         key={component.id}
-        data={component}
+        data={data}
+        componentData={component}
         components={components}
         path={currentPath}
         addressFromComponent={addressFromComponent}
+        handleDrop={handleDrop}
       />
     );
   };
-
-  const style_vertical_div = {
-    backgroundColor: "#dee0de",
-    width: "3px",
-    position: "absolute",
-    height: "110px",
-    marginTop: "68px",
-    marginLeft: "-3px",
-  };
-
-  function showLine(path, rowPath) {
-    const row = rowPath.split("-")[0];
-    if (checkIfwasSelected(path, row)) {
-      document.getElementById("parallel_line-" + path).style.backgroundColor =
-        "#dee0de";
-      parallelLines[row].splice(parallelLines[row].indexOf(path));
-    } else {
-      document.getElementById("parallel_line-" + path).style.backgroundColor =
-        "Black";
-      parallelLines[row].push(path);
-    }
-  }
-
-  function checkIfwasSelected(path, row) {
-    return parallelLines[row].includes(path);
-  }
 
   return (
     <div
@@ -78,38 +55,24 @@ const Column = ({
     >
       {data.children.map((component, index) => {
         const currentPath = `${path}-${index}`;
-
         return (
           <React.Fragment key={component.id}>
             <DropZone
               data={{
-                path: currentPath,
+                path: `${path}-${data.children.length}`,
                 childrenCount: data.children.length,
                 drawLine: false,
               }}
               onDrop={handleDrop}
+              isLast
             />
 
             {renderComponent(component, currentPath)}
           </React.Fragment>
         );
       })}
-      <DropZone
-        data={{
-          path: `${path}-${data.children.length}`,
-          childrenCount: data.children.length,
-          drawLine: false,
-        }}
-        onDrop={handleDrop}
-        isLast
-      />
-      <div
-        id={"parallel_line-" + path}
-        style={style_vertical_div}
-        onClick={() => showLine(path, rowPath)}
-      ></div>
     </div>
   );
 };
+
 export default Column;
-export { parallelLines };
